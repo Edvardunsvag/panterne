@@ -1,0 +1,392 @@
+[
+  {
+    "question": "What is the capital city of Australia?",
+    "options": [
+      "Sydney",
+      "Canberra",
+      "Melbourne",
+      "Brisbane"
+    ],
+    "correctAnswer": "Canberra",
+    "source": "BBC",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T14:29:22.455Z"
+  },
+  {
+    "question": "Which planet is known as the Red Planet?",
+    "options": [
+      "Earth",
+      "Mars",
+      "Jupiter",
+      "Venus"
+    ],
+    "correctAnswer": "Mars",
+    "source": "NASA",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T14:29:22.455Z"
+  },
+  {
+    "question": "Who wrote the play 'Romeo and Juliet'?",
+    "options": [
+      "Charles Dickens",
+      "William Shakespeare",
+      "Mark Twain",
+      "Jane Austen"
+    ],
+    "correctAnswer": "William Shakespeare",
+    "source": "The Guardian",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T14:29:22.455Z"
+  },
+  {
+    "question": "What is the largest mammal in the world?",
+    "options": [
+      "African Elephant",
+      "Blue Whale",
+      "Giraffe",
+      "Great White Shark"
+    ],
+    "correctAnswer": "Blue Whale",
+    "source": "National Geographic",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T14:29:22.455Z"
+  },
+  {
+    "question": "Which element has the chemical symbol 'O'?",
+    "options": [
+      "Gold",
+      "Oxygen",
+      "Osmium",
+      "Oganesson"
+    ],
+    "correctAnswer": "Oxygen",
+    "source": "Chemistry World",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T14:29:22.455Z"
+  },
+  {
+    "question": "In which year did the Titanic sink?",
+    "options": [
+      "1912",
+      "1905",
+      "1920",
+      "1898"
+    ],
+    "correctAnswer": "1912",
+    "source": "History.com",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T14:29:22.455Z"
+  },
+  {
+    "question": "What is the smallest country in the world?",
+    "options": [
+      "Monaco",
+      "Nauru",
+      "Vatican City",
+      "San Marino"
+    ],
+    "correctAnswer": "Vatican City",
+    "source": "CNN",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T14:29:22.455Z"
+  },
+  {
+    "question": "Which famous scientist developed the theory of general relativity?",
+    "options": [
+      "Isaac Newton",
+      "Albert Einstein",
+      "Galileo Galilei",
+      "Stephen Hawking"
+    ],
+    "correctAnswer": "Albert Einstein",
+    "source": "BBC",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T14:29:22.455Z"
+  },
+  {
+    "question": "What is the main ingredient in guacamole?",
+    "options": [
+      "Tomato",
+      "Avocado",
+      "Pepper",
+      "Onion"
+    ],
+    "correctAnswer": "Avocado",
+    "source": "Food Network",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T14:29:22.455Z"
+  },
+  {
+    "question": "Which ocean is the largest by surface area?",
+    "options": [
+      "Atlantic Ocean",
+      "Indian Ocean",
+      "Arctic Ocean",
+      "Pacific Ocean"
+    ],
+    "correctAnswer": "Pacific Ocean",
+    "source": "National Geographic",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T14:29:22.455Z"
+  },
+  {
+    "question": "What is the largest desert in the world?",
+    "options": [
+      "Sahara",
+      "Arabian",
+      "Gobi",
+      "Antarctic"
+    ],
+    "correctAnswer": "Antarctic",
+    "source": "BBC",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T14:29:32.795Z"
+  },
+  {
+    "question": "Which country is known as the Land of the Rising Sun?",
+    "options": [
+      "China",
+      "Japan",
+      "Thailand",
+      "South Korea"
+    ],
+    "correctAnswer": "Japan",
+    "source": "CNN",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T14:29:32.795Z"
+  },
+  {
+    "question": "What is the currency of Brazil?",
+    "options": [
+      "Peso",
+      "Dollar",
+      "Real",
+      "Euro"
+    ],
+    "correctAnswer": "Real",
+    "source": "Reuters",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T14:29:32.795Z"
+  },
+  {
+    "question": "Which famous artist painted the Mona Lisa?",
+    "options": [
+      "Vincent van Gogh",
+      "Pablo Picasso",
+      "Leonardo da Vinci",
+      "Claude Monet"
+    ],
+    "correctAnswer": "Leonardo da Vinci",
+    "source": "The Guardian",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T14:29:32.795Z"
+  },
+  {
+    "question": "What is the longest river in the world?",
+    "options": [
+      "Amazon",
+      "Nile",
+      "Yangtze",
+      "Mississippi"
+    ],
+    "correctAnswer": "Nile",
+    "source": "National Geographic",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T14:29:32.795Z"
+  },
+  {
+    "question": "Which gas do plants absorb from the atmosphere?",
+    "options": [
+      "Oxygen",
+      "Carbon Dioxide",
+      "Nitrogen",
+      "Hydrogen"
+    ],
+    "correctAnswer": "Carbon Dioxide",
+    "source": "BBC",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T14:29:32.795Z"
+  },
+  {
+    "question": "What is the main language spoken in Brazil?",
+    "options": [
+      "Spanish",
+      "Portuguese",
+      "English",
+      "French"
+    ],
+    "correctAnswer": "Portuguese",
+    "source": "CNN",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T14:29:32.795Z"
+  },
+  {
+    "question": "Which planet is known for its rings?",
+    "options": [
+      "Jupiter",
+      "Mars",
+      "Saturn",
+      "Neptune"
+    ],
+    "correctAnswer": "Saturn",
+    "source": "NASA",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T14:29:32.795Z"
+  },
+  {
+    "question": "What is the capital of Canada?",
+    "options": [
+      "Toronto",
+      "Vancouver",
+      "Ottawa",
+      "Montreal"
+    ],
+    "correctAnswer": "Ottawa",
+    "source": "Reuters",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T14:29:32.795Z"
+  },
+  {
+    "question": "Which ancient civilization built the pyramids?",
+    "options": [
+      "Maya",
+      "Inca",
+      "Egyptian",
+      "Mesopotamian"
+    ],
+    "correctAnswer": "Egyptian",
+    "source": "National Geographic",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T14:29:32.795Z"
+  },
+  {
+    "question": "What is the largest organ in the human body?",
+    "options": [
+      "Heart",
+      "Liver",
+      "Skin",
+      "Lung"
+    ],
+    "correctAnswer": "Skin",
+    "source": "Mayo Clinic",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T14:56:14.671Z"
+  },
+  {
+    "question": "Which country is famous for the Great Wall?",
+    "options": [
+      "India",
+      "China",
+      "Japan",
+      "South Korea"
+    ],
+    "correctAnswer": "China",
+    "source": "National Geographic",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T14:56:14.671Z"
+  },
+  {
+    "question": "What is the primary language spoken in Egypt?",
+    "options": [
+      "Arabic",
+      "English",
+      "French",
+      "Spanish"
+    ],
+    "correctAnswer": "Arabic",
+    "source": "BBC",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T14:56:14.671Z"
+  },
+  {
+    "question": "Which element is represented by the symbol 'Fe'?",
+    "options": [
+      "Fluorine",
+      "Iron",
+      "Francium",
+      "Fermium"
+    ],
+    "correctAnswer": "Iron",
+    "source": "Chemistry World",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T14:56:14.671Z"
+  },
+  {
+    "question": "What is the capital city of Italy?",
+    "options": [
+      "Rome",
+      "Venice",
+      "Florence",
+      "Milan"
+    ],
+    "correctAnswer": "Rome",
+    "source": "CNN",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T14:56:14.671Z"
+  },
+  {
+    "question": "Which famous physicist is known for his laws of motion?",
+    "options": [
+      "Albert Einstein",
+      "Isaac Newton",
+      "Galileo Galilei",
+      "Niels Bohr"
+    ],
+    "correctAnswer": "Isaac Newton",
+    "source": "History.com",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T14:56:14.671Z"
+  },
+  {
+    "question": "What is the currency used in Japan?",
+    "options": [
+      "Yen",
+      "Won",
+      "Dollar",
+      "Euro"
+    ],
+    "correctAnswer": "Yen",
+    "source": "Reuters",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T14:56:14.671Z"
+  },
+  {
+    "question": "Which continent is known as the 'Dark Continent'?",
+    "options": [
+      "Asia",
+      "Africa",
+      "South America",
+      "Australia"
+    ],
+    "correctAnswer": "Africa",
+    "source": "BBC",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T14:56:14.671Z"
+  },
+  {
+    "question": "What is the hardest natural substance on Earth?",
+    "options": [
+      "Gold",
+      "Diamond",
+      "Iron",
+      "Quartz"
+    ],
+    "correctAnswer": "Diamond",
+    "source": "Geology.com",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T14:56:14.671Z"
+  },
+  {
+    "question": "Which famous landmark is located in Paris?",
+    "options": [
+      "Statue of Liberty",
+      "Eiffel Tower",
+      "Big Ben",
+      "Colosseum"
+    ],
+    "correctAnswer": "Eiffel Tower",
+    "source": "CNN",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T14:56:14.671Z"
+  }
+]
