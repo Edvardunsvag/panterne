@@ -16,8 +16,8 @@ export const useQuizQuestion = (correctAnswer: string, onAnswerSelected: (isCorr
 
   const getOptionClass = (option: string) => {
     if (!isAnswered) return "bg-white hover:bg-gray-50";
-    if (option === correctAnswer) return "bg-green-100 border-green-500";
-    if (option === selectedOption) return "bg-red-100 border-red-500";
+    if (option === correctAnswer) return "quiz-correct";
+    if (option === selectedOption) return "quiz-incorrect";
     return "bg-white opacity-50";
   };
 

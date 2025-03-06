@@ -388,5 +388,655 @@
     "source": "CNN",
     "category": "General Knowledge",
     "generatedAt": "2025-03-06T14:56:14.671Z"
+  },
+  {
+    "question": "What is the largest planet in our solar system?",
+    "options": [
+      "Earth",
+      "Jupiter",
+      "Saturn",
+      "Mars"
+    ],
+    "correctAnswer": "Jupiter",
+    "source": "NASA",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:39:07.605Z"
+  },
+  {
+    "question": "Which famous battle was fought in 1066?",
+    "options": [
+      "Battle of Hastings",
+      "Battle of Waterloo",
+      "Battle of Gettysburg",
+      "Battle of Agincourt"
+    ],
+    "correctAnswer": "Battle of Hastings",
+    "source": "BBC",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:39:07.605Z"
+  },
+  {
+    "question": "What is the primary ingredient in traditional hummus?",
+    "options": [
+      "Chickpeas",
+      "Lentils",
+      "Peas",
+      "Beans"
+    ],
+    "correctAnswer": "Chickpeas",
+    "source": "CNN",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:39:07.605Z"
+  },
+  {
+    "question": "Which country is known for inventing pizza?",
+    "options": [
+      "Greece",
+      "Italy",
+      "France",
+      "Spain"
+    ],
+    "correctAnswer": "Italy",
+    "source": "Reuters",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:39:07.605Z"
+  },
+  {
+    "question": "What is the capital city of Egypt?",
+    "options": [
+      "Cairo",
+      "Alexandria",
+      "Giza",
+      "Luxor"
+    ],
+    "correctAnswer": "Cairo",
+    "source": "Al Jazeera",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:39:07.605Z"
+  },
+  {
+    "question": "Which element has the atomic number 1?",
+    "options": [
+      "Helium",
+      "Oxygen",
+      "Hydrogen",
+      "Carbon"
+    ],
+    "correctAnswer": "Hydrogen",
+    "source": "Scientific American",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:39:07.605Z"
+  },
+  {
+    "question": "What is the name of the longest river in Africa?",
+    "options": [
+      "Nile",
+      "Amazon",
+      "Yangtze",
+      "Mississippi"
+    ],
+    "correctAnswer": "Nile",
+    "source": "National Geographic",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:39:07.605Z"
+  },
+  {
+    "question": "Which famous physicist developed the theory of electromagnetism?",
+    "options": [
+      "Isaac Newton",
+      "Albert Einstein",
+      "James Clerk Maxwell",
+      "Niels Bohr"
+    ],
+    "correctAnswer": "James Clerk Maxwell",
+    "source": "BBC",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:39:07.605Z"
+  },
+  {
+    "question": "What is the most widely spoken language in the world?",
+    "options": [
+      "Spanish",
+      "English",
+      "Mandarin Chinese",
+      "Hindi"
+    ],
+    "correctAnswer": "Mandarin Chinese",
+    "source": "The Guardian",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:39:07.605Z"
+  },
+  {
+    "question": "Which organ in the human body is primarily responsible for detoxification?",
+    "options": [
+      "Heart",
+      "Liver",
+      "Kidney",
+      "Lungs"
+    ],
+    "correctAnswer": "Liver",
+    "source": "Mayo Clinic",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:39:07.605Z"
+  },
+  {
+    "question": "What is the largest island in the world?",
+    "options": [
+      "Greenland",
+      "New Guinea",
+      "Borneo",
+      "Madagascar"
+    ],
+    "correctAnswer": "Greenland",
+    "source": "BBC",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:42:33.964Z"
+  },
+  {
+    "question": "Which famous physicist is known for the uncertainty principle?",
+    "options": [
+      "Isaac Newton",
+      "Niels Bohr",
+      "Werner Heisenberg",
+      "Albert Einstein"
+    ],
+    "correctAnswer": "Werner Heisenberg",
+    "source": "CNN",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:42:33.964Z"
+  },
+  {
+    "question": "What is the primary ingredient in traditional Japanese miso soup?",
+    "options": [
+      "Soybeans",
+      "Rice",
+      "Seaweed",
+      "Tofu"
+    ],
+    "correctAnswer": "Soybeans",
+    "source": "Reuters",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:42:33.964Z"
+  },
+  {
+    "question": "Which country is home to the ancient city of Petra?",
+    "options": [
+      "Jordan",
+      "Egypt",
+      "Greece",
+      "Turkey"
+    ],
+    "correctAnswer": "Jordan",
+    "source": "BBC",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:42:33.964Z"
+  },
+  {
+    "question": "What is the capital city of Iceland?",
+    "options": [
+      "Reykjavik",
+      "Oslo",
+      "Helsinki",
+      "Copenhagen"
+    ],
+    "correctAnswer": "Reykjavik",
+    "source": "CNN",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:42:33.964Z"
+  },
+  {
+    "question": "Which element is known for its use in batteries and has the symbol 'Li'?",
+    "options": [
+      "Lithium",
+      "Lead",
+      "Iron",
+      "Calcium"
+    ],
+    "correctAnswer": "Lithium",
+    "source": "Reuters",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:42:33.964Z"
+  },
+  {
+    "question": "What is the name of the longest mountain range in the world?",
+    "options": [
+      "Himalayas",
+      "Andes",
+      "Rockies",
+      "Alps"
+    ],
+    "correctAnswer": "Andes",
+    "source": "BBC",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:42:33.964Z"
+  },
+  {
+    "question": "Which famous novel begins with the line 'Call me Ishmael'?",
+    "options": [
+      "Moby Dick",
+      "Pride and Prejudice",
+      "1984",
+      "The Great Gatsby"
+    ],
+    "correctAnswer": "Moby Dick",
+    "source": "CNN",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:42:33.964Z"
+  },
+  {
+    "question": "What is the most widely consumed fruit in the world?",
+    "options": [
+      "Banana",
+      "Apple",
+      "Orange",
+      "Grapes"
+    ],
+    "correctAnswer": "Banana",
+    "source": "Reuters",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:42:33.964Z"
+  },
+  {
+    "question": "Which country is known for the invention of the compass?",
+    "options": [
+      "China",
+      "Greece",
+      "India",
+      "Egypt"
+    ],
+    "correctAnswer": "China",
+    "source": "BBC",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:42:33.964Z"
+  },
+  {
+    "question": "What is the capital city of New Zealand?",
+    "options": [
+      "Auckland",
+      "Wellington",
+      "Christchurch",
+      "Hamilton"
+    ],
+    "correctAnswer": "Wellington",
+    "source": "BBC",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:45:53.415Z"
+  },
+  {
+    "question": "Which famous scientist is known for the discovery of penicillin?",
+    "options": [
+      "Marie Curie",
+      "Alexander Fleming",
+      "Louis Pasteur",
+      "Isaac Newton"
+    ],
+    "correctAnswer": "Alexander Fleming",
+    "source": "Reuters",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:45:53.415Z"
+  },
+  {
+    "question": "What is the largest continent by land area?",
+    "options": [
+      "Africa",
+      "Asia",
+      "North America",
+      "Europe"
+    ],
+    "correctAnswer": "Asia",
+    "source": "CNN",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:45:53.415Z"
+  },
+  {
+    "question": "Which ancient city is known for its hanging gardens, one of the Seven Wonders of the Ancient World?",
+    "options": [
+      "Babylon",
+      "Athens",
+      "Rome",
+      "Carthage"
+    ],
+    "correctAnswer": "Babylon",
+    "source": "National Geographic",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:45:53.415Z"
+  },
+  {
+    "question": "What is the primary ingredient in traditional sushi?",
+    "options": [
+      "Rice",
+      "Fish",
+      "Seaweed",
+      "Vegetables"
+    ],
+    "correctAnswer": "Rice",
+    "source": "BBC",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:45:53.415Z"
+  },
+  {
+    "question": "Which country is famous for its fjords?",
+    "options": [
+      "Sweden",
+      "Norway",
+      "Finland",
+      "Denmark"
+    ],
+    "correctAnswer": "Norway",
+    "source": "CNN",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:45:53.415Z"
+  },
+  {
+    "question": "What is the name of the longest river in South America?",
+    "options": [
+      "Amazon River",
+      "Nile River",
+      "Mississippi River",
+      "Yangtze River"
+    ],
+    "correctAnswer": "Amazon River",
+    "source": "Reuters",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:45:53.415Z"
+  },
+  {
+    "question": "Which famous artist is known for the ceiling of the Sistine Chapel?",
+    "options": [
+      "Leonardo da Vinci",
+      "Pablo Picasso",
+      "Michelangelo",
+      "Vincent van Gogh"
+    ],
+    "correctAnswer": "Michelangelo",
+    "source": "National Geographic",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:45:53.415Z"
+  },
+  {
+    "question": "What is the primary language spoken in Argentina?",
+    "options": [
+      "Spanish",
+      "Portuguese",
+      "English",
+      "French"
+    ],
+    "correctAnswer": "Spanish",
+    "source": "BBC",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:45:53.415Z"
+  },
+  {
+    "question": "Which planet is known for having the most moons?",
+    "options": [
+      "Earth",
+      "Mars",
+      "Jupiter",
+      "Saturn"
+    ],
+    "correctAnswer": "Jupiter",
+    "source": "CNN",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:45:53.415Z"
+  },
+  {
+    "question": "What is the capital city of Norway?",
+    "options": [
+      "Oslo",
+      "Stockholm",
+      "Copenhagen",
+      "Helsinki"
+    ],
+    "correctAnswer": "Oslo",
+    "source": "BBC",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:48:08.384Z"
+  },
+  {
+    "question": "Which famous physicist is known for his work on quantum mechanics?",
+    "options": [
+      "Isaac Newton",
+      "Niels Bohr",
+      "Albert Einstein",
+      "Galileo Galilei"
+    ],
+    "correctAnswer": "Niels Bohr",
+    "source": "Reuters",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:48:08.384Z"
+  },
+  {
+    "question": "What is the largest organ in the human body?",
+    "options": [
+      "Heart",
+      "Liver",
+      "Skin",
+      "Lungs"
+    ],
+    "correctAnswer": "Skin",
+    "source": "CNN",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:48:08.384Z"
+  },
+  {
+    "question": "Which country is known for the invention of the printing press?",
+    "options": [
+      "Germany",
+      "China",
+      "Italy",
+      "France"
+    ],
+    "correctAnswer": "Germany",
+    "source": "BBC",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:48:08.384Z"
+  },
+  {
+    "question": "What is the primary ingredient in traditional pesto sauce?",
+    "options": [
+      "Basil",
+      "Parsley",
+      "Cilantro",
+      "Oregano"
+    ],
+    "correctAnswer": "Basil",
+    "source": "Reuters",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:48:08.384Z"
+  },
+  {
+    "question": "Which ocean is the smallest in the world?",
+    "options": [
+      "Indian Ocean",
+      "Arctic Ocean",
+      "Atlantic Ocean",
+      "Pacific Ocean"
+    ],
+    "correctAnswer": "Arctic Ocean",
+    "source": "CNN",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:48:08.384Z"
+  },
+  {
+    "question": "What is the currency of South Africa?",
+    "options": [
+      "Rand",
+      "Dollar",
+      "Pound",
+      "Euro"
+    ],
+    "correctAnswer": "Rand",
+    "source": "BBC",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:48:08.384Z"
+  },
+  {
+    "question": "Which ancient civilization is known for its cuneiform writing?",
+    "options": [
+      "Egyptians",
+      "Sumerians",
+      "Minoans",
+      "Phoenicians"
+    ],
+    "correctAnswer": "Sumerians",
+    "source": "Reuters",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:48:08.384Z"
+  },
+  {
+    "question": "What is the main ingredient in traditional French ratatouille?",
+    "options": [
+      "Eggplant",
+      "Zucchini",
+      "Tomato",
+      "Bell pepper"
+    ],
+    "correctAnswer": "Eggplant",
+    "source": "CNN",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:48:08.384Z"
+  },
+  {
+    "question": "Which planet is known for its extreme winds and storms?",
+    "options": [
+      "Mars",
+      "Jupiter",
+      "Saturn",
+      "Neptune"
+    ],
+    "correctAnswer": "Neptune",
+    "source": "BBC",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:48:08.384Z"
+  },
+  {
+    "question": "What is the largest volcano in the world?",
+    "options": [
+      "Mauna Loa",
+      "Kilimanjaro",
+      "Mount St. Helens",
+      "Mount Fuji"
+    ],
+    "correctAnswer": "Mauna Loa",
+    "source": "National Geographic",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:50:14.028Z"
+  },
+  {
+    "question": "Which famous shipwreck was discovered in 1985?",
+    "options": [
+      "The Bismarck",
+      "The Titanic",
+      "The Lusitania",
+      "The Andrea Doria"
+    ],
+    "correctAnswer": "The Titanic",
+    "source": "BBC",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:50:14.028Z"
+  },
+  {
+    "question": "What is the primary ingredient in traditional paella?",
+    "options": [
+      "Rice",
+      "Pasta",
+      "Potatoes",
+      "Quinoa"
+    ],
+    "correctAnswer": "Rice",
+    "source": "CNN",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:50:14.028Z"
+  },
+  {
+    "question": "Which country is known for the invention of the sauna?",
+    "options": [
+      "Finland",
+      "Sweden",
+      "Norway",
+      "Denmark"
+    ],
+    "correctAnswer": "Finland",
+    "source": "Reuters",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:50:14.028Z"
+  },
+  {
+    "question": "What is the capital city of Mongolia?",
+    "options": [
+      "Ulaanbaatar",
+      "Astana",
+      "Tashkent",
+      "Bishkek"
+    ],
+    "correctAnswer": "Ulaanbaatar",
+    "source": "BBC",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:50:14.028Z"
+  },
+  {
+    "question": "Which famous scientist is known for his work on the structure of DNA?",
+    "options": [
+      "Albert Einstein",
+      "James Watson",
+      "Isaac Newton",
+      "Charles Darwin"
+    ],
+    "correctAnswer": "James Watson",
+    "source": "National Geographic",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:50:14.028Z"
+  },
+  {
+    "question": "What is the most spoken language in the world?",
+    "options": [
+      "Spanish",
+      "English",
+      "Mandarin Chinese",
+      "Hindi"
+    ],
+    "correctAnswer": "Mandarin Chinese",
+    "source": "CNN",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:50:14.028Z"
+  },
+  {
+    "question": "Which ancient civilization is known for its pyramids and hieroglyphs?",
+    "options": [
+      "Maya",
+      "Inca",
+      "Egyptian",
+      "Mesopotamian"
+    ],
+    "correctAnswer": "Egyptian",
+    "source": "BBC",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:50:14.028Z"
+  },
+  {
+    "question": "What is the primary ingredient in traditional kimchi?",
+    "options": [
+      "Cabbage",
+      "Carrot",
+      "Radish",
+      "Cucumber"
+    ],
+    "correctAnswer": "Cabbage",
+    "source": "Reuters",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:50:14.028Z"
+  },
+  {
+    "question": "Which planet is known for having the largest storm in the solar system?",
+    "options": [
+      "Mars",
+      "Jupiter",
+      "Saturn",
+      "Neptune"
+    ],
+    "correctAnswer": "Jupiter",
+    "source": "National Geographic",
+    "category": "General Knowledge",
+    "generatedAt": "2025-03-06T15:50:14.028Z"
   }
 ]

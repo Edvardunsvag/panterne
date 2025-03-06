@@ -93,3 +93,15 @@ body {
   }
 }
 
+.quiz-correct {
+  background-color: #d1fae5 !important;
+  border-color: #10b981 !important;
+  color: #047857 !important;
+}
+
+.quiz-incorrect {
+  background-color: #fee2e2 !important;
+  border-color: #ef4444 !important;
+  color: #b91c1c !important;
+}
+
