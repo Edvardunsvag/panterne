@@ -1,5 +1,7 @@
+'use client'
+import { signIn } from "@/auth"
 import QuizGenerator from "@/components/QuizGenerator"
-
+import SignInButton from "@/components/SignInButton"
 //Comment to run main hook
 export default function Home() {
   return (

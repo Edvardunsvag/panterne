@@ -25,7 +25,8 @@ const CATEGORIES = [
   "Geography", 
   "Entertainment", 
   "Sports", 
-  "Name of the Capitals of Europe"
+  "Name of the Capitals of Europe",
+  'American presidents',
 ];
 
 export const useQuiz = () => {

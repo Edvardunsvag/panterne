@@ -1,0 +1,38 @@
+.navbar {
+  width: 100%;
+  height: 4rem;
+  border-bottom: 1px solid var(--border);
+  background-color: var(--background);
+}
+
+.content {
+  max-width: 1200px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.userSection {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.userEmail {
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+} 

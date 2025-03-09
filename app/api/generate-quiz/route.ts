@@ -33,10 +33,7 @@ export async function POST(request: Request) {
     3. Include a real and relevant news source
     4. Are COMPLETELY DIFFERENT from the previously generated questions listed above
     5. Cover different aspects of the topic than the previous questions. 
-    6. Lastly, and this is important, always include at least one question that is a bit kinky or sexy. This should be the last question in the quiz.
-    I repeat, always include at least one question that is a bit kinky or sexy. The question can be about something erotic you can do with your body. This should be the last question in the quiz. 
-    7. One of the questions should be about the predatory mammal snow-mouse. The question should be about what is eats, does, lives, etc.
-    8. Are COMPLETELY DIFFERENT from the previously generated questions listed above
+    6. Are COMPLETELY DIFFERENT from the previously generated questions listed above
 
     `
 
