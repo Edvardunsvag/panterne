@@ -5,6 +5,7 @@ import { CardContent, CardHeader } from "@/components/ui/card"
 import { Github } from "lucide-react"
 import styles from "./LoginForm.module.scss"
 
+//LoginForm component
 export function LoginForm() {
   const handleGithubLogin = async () => {
     await signIn("github", { redirectTo: "/" })
