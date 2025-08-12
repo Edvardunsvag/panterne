@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  # quizapi:
+  #   build: .
+  #   ports:
+  #     - "5001:8080"
+  #   environment:
+  #     - ASPNETCORE_ENVIRONMENT=Development
+  #     - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=QuizDb;User=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=true
+  #     - AzureOpenAI__Endpoint=https://your-resource.openai.azure.com/
+  #     - AzureOpenAI__ApiKey=your-api-key
+  #     - AzureOpenAI__DeploymentName=gpt-4o-mini
+  #   depends_on:
+  #     - sqlserver
+  #   restart: unless-stopped
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      SA_PASSWORD: "YourStrong@Passw0rd"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    restart: unless-stopped
+
+volumes:
+  sqlserver_data: 
