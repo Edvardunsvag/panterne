@@ -1,10 +1,10 @@
 "use client"
 
-import { useQuiz } from "../hooks/useQuiz"
+import { useQuiz } from "@/hooks/useQuiz"
 import QuizQuestion from "./QuizQuestion"
 
 /**
- * Type definition for a quiz question
+ * Quiz question interface matching the API response
  */
 interface QuizQuestionType {
   question: string
@@ -17,7 +17,7 @@ interface QuizQuestionType {
  * Available quiz categories
  */
 const CATEGORIES = [
-  "General Knowledge",
+  "general",
   "Science",
   "History",
   "Geography",
@@ -27,7 +27,7 @@ const CATEGORIES = [
 ]
 
 /**
- * QuizGenerator component allows users to generate and interact with quiz questions
+ * QuizGenerator component allows users to load and interact with quiz questions
  */
 export default function QuizGenerator() {
   const {
@@ -38,7 +38,7 @@ export default function QuizGenerator() {
     score,
     CATEGORIES,
     setCategory,
-    generateQuiz,
+    loadQuestions,
     handleAnswerSelected
   } = useQuiz()
 
@@ -69,13 +69,13 @@ export default function QuizGenerator() {
           </select>
         </div>
         <button
-          onClick={generateQuiz}
+          onClick={() => loadQuestions(10)}
           disabled={loading}
           className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors disabled:bg-blue-400"
           aria-busy={loading}
-          aria-label={loading ? "Generating quiz questions" : "Generate quiz questions"}
+          aria-label={loading ? "Loading quiz questions" : "Load quiz questions"}
         >
-          {loading ? "Generating Quiz..." : "Generate Quiz Questions"}
+          {loading ? "Loading Quiz..." : "Load Quiz Questions"}
         </button>
       </div>
 
@@ -92,27 +92,23 @@ export default function QuizGenerator() {
 
       {/* Quiz Results */}
       {questions.length > 0 && (
-        <div className="bg-white shadow rounded-lg p-6 mb-6">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-bold text-gray-900">
-              {category} Quiz
+        <div className="bg-white shadow rounded-lg p-6">
+          <div className="mb-4">
+            <h2 className="text-xl font-semibold text-gray-900">
+              Quiz Questions - {category}
             </h2>
-            <div 
-              className="text-sm font-medium text-gray-600"
-              aria-live="polite"
-              aria-label={`Current score: ${score.correct} correct out of ${score.total} questions answered`}
-            >
+            <p className="text-sm text-gray-600">
               Score: {score.correct}/{score.total}
-            </div>
+            </p>
           </div>
           <div className="space-y-6">
-            {questions.map((q, index) => (
+            {questions.map((question, index) => (
               <QuizQuestion
                 key={index}
-                question={q.question}
-                options={q.options}
-                correctAnswer={q.correctAnswer}
-                source={q.source}
+                question={question.question}
+                options={question.options}
+                correctAnswer={question.correctAnswer}
+                source={question.source}
                 onAnswerSelected={handleAnswerSelected}
               />
             ))}

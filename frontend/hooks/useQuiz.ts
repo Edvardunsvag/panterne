@@ -1,14 +1,8 @@
 import { useState } from "react";
-
-interface QuizQuestionType {
-  question: string;
-  options: string[];
-  correctAnswer: string;
-  source: string;
-}
+import { apiClient, QuestionDto } from "@/lib/api-client";
 
 interface QuizState {
-  questions: QuizQuestionType[];
+  questions: QuestionDto[];
   loading: boolean;
   error: string | null;
   category: string;
@@ -19,7 +13,7 @@ interface QuizState {
 }
 
 const CATEGORIES = [
-  "General Knowledge",
+  "general",
   "Science", 
   "History", 
   "Geography", 
@@ -34,7 +28,7 @@ export const useQuiz = () => {
     questions: [],
     loading: false,
     error: null,
-    category: "General Knowledge",
+    category: "general",
     score: { correct: 0, total: 0 }
   });
 
@@ -52,7 +46,7 @@ export const useQuiz = () => {
     }));
   };
 
-  const generateQuiz = async () => {
+  const loadQuestions = async (count: number = 10) => {
     setState(prev => ({
       ...prev,
       loading: true,
@@ -62,35 +56,26 @@ export const useQuiz = () => {
     }));
 
     try {
-      const response = await fetch("/api/generate-quiz", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ category: state.category }),
-      });
+      const response = await apiClient.getRecentQuestionsByCategory(state.category, count);
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || `Error: ${response.status} ${response.statusText}`);
+      if (response.error) {
+        throw new Error(response.error);
       }
 
-      const data = await response.json();
-
-      if (!data.questions || !Array.isArray(data.questions) || data.questions.length === 0) {
-        throw new Error("No quiz questions were generated. Please try again.");
+      if (!response.data || !Array.isArray(response.data) || response.data.length === 0) {
+        throw new Error("No quiz questions were found for this category. Please try again.");
       }
 
       setState(prev => ({
         ...prev,
-        questions: data.questions,
+        questions: response.data!,
         loading: false
       }));
     } catch (err) {
-      console.error("Quiz generation error:", err);
+      console.error("Quiz loading error:", err);
       setState(prev => ({
         ...prev,
-        error: err instanceof Error ? err.message : "An error occurred while generating the quiz",
+        error: err instanceof Error ? err.message : "An error occurred while loading quiz questions",
         loading: false
       }));
     }
@@ -100,7 +85,7 @@ export const useQuiz = () => {
     ...state,
     CATEGORIES,
     setCategory,
-    generateQuiz,
+    loadQuestions,
     handleAnswerSelected
   };
 }; 
