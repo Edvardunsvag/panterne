@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate-api": "openapi --input http://localhost:5000/swagger/v1/swagger.json --output ./lib/generated/client --client fetch"
   },
   "dependencies": {
     "@auth/supabase-adapter": "^1.8.0",
@@ -69,6 +70,8 @@
     "@types/react-dom": "^18",
     "postcss": "^8",
     "tailwindcss": "^3.4.17",
-    "typescript": "^5"
+    "typescript": "^5",
+    "openapi-typescript": "^6.7.4",
+    "@openapitools/openapi-generator-cli": "^2.7.0"
   }
 }
