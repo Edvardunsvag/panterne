@@ -14,19 +14,6 @@ interface QuizQuestionType {
 }
 
 /**
- * Available quiz categories
- */
-const CATEGORIES = [
-  "general",
-  "Science",
-  "History",
-  "Geography",
-  "Entertainment",
-  "Sports",
-  "Name of the Capitals of Europe"
-]
-
-/**
  * QuizGenerator component allows users to load and interact with quiz questions
  */
 export default function QuizGenerator() {
@@ -56,7 +43,7 @@ export default function QuizGenerator() {
           <select
             id="category"
             value={category}
-            onChange={(e) => setCategory(e.target.value)}
+            onChange={(e) => setCategory(e.target.value as any)}
             className="w-full p-2 border border-gray-300 rounded-md"
             disabled={loading}
             aria-label="Quiz category"
@@ -105,10 +92,10 @@ export default function QuizGenerator() {
             {questions.map((question, index) => (
               <QuizQuestion
                 key={index}
-                question={question.question}
-                options={question.options}
-                correctAnswer={question.correctAnswer}
-                source={question.source}
+                question={question.question ?? ''}
+                options={question.options ?? []}
+                correctAnswer={question.correctAnswer ?? ''}
+                source={question.source ?? ''}
                 onAnswerSelected={handleAnswerSelected}
               />
             ))}

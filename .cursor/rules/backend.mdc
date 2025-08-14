@@ -15,6 +15,7 @@ files: "**/*.cs"
   ## Code Style and Structure
   - Write concise, idiomatic C# code with accurate examples.
   - Follow .NET and ASP.NET Core conventions and best practices.
+  - Always put readability over overengineering
   - Use object-oriented and functional programming patterns as appropriate.
   - Prefer LINQ and lambda expressions for collection operations.
   - Use descriptive variable and method names (e.g., 'IsUserSignedIn', 'CalculateTotal').

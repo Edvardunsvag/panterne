@@ -1,38 +1,28 @@
 import { useState } from "react";
 import { apiClient, QuestionDto } from "@/lib/api-client";
+import { QUIZ_CATEGORIES, QuizCategory } from "@/lib/categories";
 
 interface QuizState {
   questions: QuestionDto[];
   loading: boolean;
   error: string | null;
-  category: string;
+  category: QuizCategory;
   score: {
     correct: number;
     total: number;
   };
 }
 
-const CATEGORIES = [
-  "general",
-  "Science", 
-  "History", 
-  "Geography", 
-  "Entertainment", 
-  "Sports", 
-  "Name of the Capitals of Europe",
-  'American presidents',
-];
-
 export const useQuiz = () => {
   const [state, setState] = useState<QuizState>({
     questions: [],
     loading: false,
     error: null,
-    category: "general",
+    category: "General Knowledge",
     score: { correct: 0, total: 0 }
   });
 
-  const setCategory = (category: string) => {
+  const setCategory = (category: QuizCategory) => {
     setState(prev => ({ ...prev, category }));
   };
 
@@ -83,7 +73,7 @@ export const useQuiz = () => {
 
   return {
     ...state,
-    CATEGORIES,
+    CATEGORIES: QUIZ_CATEGORIES,
     setCategory,
     loadQuestions,
     handleAnswerSelected
