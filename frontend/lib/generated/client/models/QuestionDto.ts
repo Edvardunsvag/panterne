@@ -3,9 +3,10 @@
 /* tslint:disable */
 /* eslint-disable */
 export type QuestionDto = {
+    id?: string;
     question?: string | null;
     options?: Array<string> | null;
-    correctAnswer?: string | null;
+    correctIndex?: number;
     source?: string | null;
 };
 
