@@ -10,7 +10,7 @@ import { QUIZ_CATEGORIES } from '@/lib/constants/categories';
 
 export const Leaderboard = () => {
   const { loadLeaderboard, leaderboard, loadingLeaderboard, error } = useQuizScoring();
-  const [selectedCategory, setSelectedCategory] = useState(QUIZ_CATEGORIES[0]);
+  const [selectedCategory, setSelectedCategory] = useState<string>(QUIZ_CATEGORIES[0]);
 
   useEffect(() => {
     loadLeaderboard(selectedCategory);
@@ -68,7 +68,7 @@ export const Leaderboard = () => {
                 </div>
                 
                 <Avatar className="w-10 h-10">
-                  <AvatarImage src={entry.avatarUrl} alt={entry.userName} />
+                  <AvatarImage src={entry.avatarUrl ?? ''} alt={entry.userName ?? ''} />
                   <AvatarFallback>{entry.userName?.slice(0, 2).toUpperCase()}</AvatarFallback>
                 </Avatar>
                 

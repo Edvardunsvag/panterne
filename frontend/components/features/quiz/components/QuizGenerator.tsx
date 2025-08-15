@@ -65,7 +65,7 @@ export default function QuizGenerator() {
 
     // Create confetti for correct answers from the button
     if (isCorrect) {
-      const correctButton = optionRefs.current[currentQuestion.correctIndex]
+      const correctButton = optionRefs.current[currentQuestion.correctIndex ?? 0]
       createConfettiFromButton(correctButton)
     }
 
@@ -209,7 +209,7 @@ export default function QuizGenerator() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {currentQuestion.options.map((option, index) => (
+              {currentQuestion.options?.map((option, index) => (
                 <Button
                   key={index}
                   ref={(el) => {
@@ -257,7 +257,7 @@ export default function QuizGenerator() {
                     <div className="text-center">
                       <span className="font-semibold">Not quite right!</span>
                       <br />
-                      <span className="text-sm">The correct answer was: <strong>{currentQuestion.options[currentQuestion.correctIndex]}</strong></span>
+                      <span className="text-sm">The correct answer was: <strong>{currentQuestion.options?.[currentQuestion.correctIndex ?? 0]}</strong></span>
                     </div>
                   </div>
                 )}
