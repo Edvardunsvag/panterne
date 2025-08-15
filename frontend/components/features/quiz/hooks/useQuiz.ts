@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { apiClient, QuestionDto, QuizAttemptDto } from "@/lib/api-client";
 import { useQuizScoring } from "./useQuizScoring";
-import { useUser } from "./useUser";
-import { QUIZ_CATEGORIES, QuizCategory } from "@/lib/categories";
+import { useUser } from "@/components/features/user/hooks/useUser";
+import { QUIZ_CATEGORIES, QuizCategory } from "@/lib/constants/categories";
 
 interface QuizState {
   questions: QuestionDto[];

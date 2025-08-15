@@ -1,11 +1,11 @@
 "use client"
 
-import { useQuiz } from "@/hooks/useQuiz"
+import { useQuiz } from "@/components/features/quiz/hooks/useQuiz"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { useSession } from "next-auth/react"
-import SignInButton from "@/components/SignInButton"
+import SignInButton from "@/components/features/auth/components/SignInButton"
 import { CheckCircle, XCircle, Trophy, Clock } from "lucide-react"
 
 /**

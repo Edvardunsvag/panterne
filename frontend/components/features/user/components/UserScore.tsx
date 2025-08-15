@@ -1,8 +1,8 @@
 'use client';
-import { useUser } from '@/hooks/useUser';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Trophy, Target, TrendingUp } from 'lucide-react';
+import { useUser } from '@/components/features/user/hooks/useUser';
 
 export const UserScore = () => {
   const { user, userScores, loading, error } = useUser();
@@ -69,7 +69,7 @@ export const UserScore = () => {
                 </div>
                 <div className="flex items-center gap-1">
                   <TrendingUp className="w-4 h-4" />
-                  {score.accuracyPercentage.toFixed(1)}% accuracy
+                  {score.accuracyPercentage?.toFixed(1) ?? '0.0'}% accuracy
                 </div>
               </div>
             </div>

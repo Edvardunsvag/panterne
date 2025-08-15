@@ -1,12 +1,12 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { useQuizScoring } from '@/hooks/useQuizScoring';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Crown, Medal, Award } from 'lucide-react';
-import { QUIZ_CATEGORIES } from '@/lib/categories';
+import { useQuizScoring } from '@/components/features/quiz/hooks/useQuizScoring';
+import { QUIZ_CATEGORIES } from '@/lib/constants/categories';
 
 export const Leaderboard = () => {
   const { loadLeaderboard, leaderboard, loadingLeaderboard, error } = useQuizScoring();
@@ -64,18 +64,18 @@ export const Leaderboard = () => {
             {leaderboard.map((entry) => (
               <div key={`${entry.userName}-${entry.rank}`} className="flex items-center gap-3 p-3 border rounded-lg">
                 <div className="flex items-center justify-center w-8">
-                  {getRankIcon(entry.rank)}
+                  {getRankIcon(entry.rank ?? 0)}
                 </div>
                 
                 <Avatar className="w-10 h-10">
                   <AvatarImage src={entry.avatarUrl} alt={entry.userName} />
-                  <AvatarFallback>{entry.userName.slice(0, 2).toUpperCase()}</AvatarFallback>
+                  <AvatarFallback>{entry.userName?.slice(0, 2).toUpperCase()}</AvatarFallback>
                 </Avatar>
                 
                 <div className="flex-1">
                   <div className="font-semibold">{entry.userName}</div>
                   <div className="text-sm text-muted-foreground">
-                    {entry.questionsAnswered} questions • {entry.accuracyPercentage.toFixed(1)}% accuracy
+                    {entry.questionsAnswered} questions • {entry.accuracyPercentage?.toFixed(1) ?? '0.0'}% accuracy
                   </div>
                 </div>
                 

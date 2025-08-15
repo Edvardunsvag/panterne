@@ -1,5 +1,5 @@
 import { auth } from "@/auth"
-import { SignOutButton } from "@/components/auth/SignOutButton"
+import { SignOutButton } from "@/components/features/auth/components/SignOutButton"
 
 export async function Navbar() {
   const session = await auth()

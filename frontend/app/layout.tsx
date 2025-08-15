@@ -2,8 +2,8 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
-import { Navbar } from "@/components/layout/Navbar"
-import { SessionWrapper } from "@/components/SessionWrapper"
+import { Navbar } from "@/components/common/layout/Navbar"
+import { SessionWrapper } from "@/components/common/layout/SessionWrapper"
 
 const inter = Inter({ subsets: ["latin"] })
 

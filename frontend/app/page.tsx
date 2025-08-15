@@ -1,10 +1,10 @@
 'use client'
-import QuizGenerator from "@/components/QuizGenerator"
-import { UserScore } from "@/components/UserScore"
-import { Leaderboard } from "@/components/Leaderboard"
+import QuizGenerator from "@/components/features/quiz/components/QuizGenerator"
+import { UserScore } from "@/components/features/user/components/UserScore"
+import { Leaderboard } from "@/components/features/leaderboard/components/Leaderboard"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useSession } from "next-auth/react"
-import SignInButton from "@/components/SignInButton"
+import SignInButton from "@/components/features/auth/components/SignInButton"
 
 export default function Home() {
   const { data: session, status } = useSession()
