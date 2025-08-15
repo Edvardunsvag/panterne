@@ -29,7 +29,7 @@ export const useUser = () => {
         setError(syncResult.error);
       } else if (syncResult.data) {
         setUser(syncResult.data);
-        await loadUserScores(syncResult.data.id);
+        await loadUserScores(syncResult.data.id ?? '');
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to sync user');
@@ -46,7 +46,7 @@ export const useUser = () => {
   };
 
   const refreshUserScores = async () => {
-    if (user) {
+    if (user && user.id) {
       await loadUserScores(user.id);
     }
   };

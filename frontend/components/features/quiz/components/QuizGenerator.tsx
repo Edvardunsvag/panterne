@@ -6,10 +6,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { useSession } from "next-auth/react"
 import SignInButton from "@/components/features/auth/components/SignInButton"
-import { CheckCircle, XCircle, Trophy, Clock } from "lucide-react"
+import { CheckCircle, XCircle, Trophy, Clock, Sparkles, Zap, Target, Star } from "lucide-react"
+import { useState, useEffect } from "react"
 
 /**
- * QuizGenerator component with manual submission
+ * Enhanced QuizGenerator component with animations and visual feedback
  */
 export default function QuizGenerator() {
   const { data: session } = useSession()
@@ -34,26 +35,110 @@ export default function QuizGenerator() {
     canSubmit
   } = useQuiz()
 
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
+  const [isAnswered, setIsAnswered] = useState(false)
+  const [showFeedback, setShowFeedback] = useState(false)
+  const [questionKey, setQuestionKey] = useState(0)
+
   const currentQuestion = getCurrentQuestion()
   const progress = getProgress()
 
+  // Reset state when moving to next question
+  useEffect(() => {
+    setSelectedAnswer(null)
+    setIsAnswered(false)
+    setShowFeedback(false)
+    setQuestionKey(prev => prev + 1)
+  }, [currentQuestionIndex])
+
   const handleOptionClick = (optionIndex: number) => {
-    handleAnswerSelected(optionIndex)
+    if (isAnswered) return
+
+    setSelectedAnswer(optionIndex)
+    setIsAnswered(true)
+    setShowFeedback(true)
+
+    const isCorrect = optionIndex === currentQuestion?.correctIndex
+
+    // Create confetti for correct answers
+    if (isCorrect) {
+      createConfetti()
+    }
+
+    // Delay moving to next question to show feedback
+    setTimeout(() => {
+      handleAnswerSelected(optionIndex)
+      setShowFeedback(false)
+    }, 1500)
+  }
+
+  const createConfetti = () => {
+    const confettiContainer = document.createElement('div')
+    confettiContainer.style.position = 'fixed'
+    confettiContainer.style.top = '0'
+    confettiContainer.style.left = '0'
+    confettiContainer.style.width = '100%'
+    confettiContainer.style.height = '100%'
+    confettiContainer.style.pointerEvents = 'none'
+    confettiContainer.style.zIndex = '1000'
+    
+    for (let i = 0; i < 30; i++) {
+      const confetti = document.createElement('div')
+      confetti.className = 'confetti-piece'
+      confetti.style.left = Math.random() * 100 + '%'
+      confetti.style.animationDelay = Math.random() * 2 + 's'
+      confetti.style.animationDuration = (Math.random() * 2 + 2) + 's'
+      confettiContainer.appendChild(confetti)
+    }
+    
+    document.body.appendChild(confettiContainer)
+    
+    setTimeout(() => {
+      if (document.body.contains(confettiContainer)) {
+        document.body.removeChild(confettiContainer)
+      }
+    }, 4000)
   }
 
   const handleSubmit = async () => {
     const success = await submitQuiz()
     if (success) {
-      // Quiz submitted successfully
+      createConfetti()
     }
+  }
+
+  const getOptionClass = (optionIndex: number) => {
+    const baseClasses = "w-full text-left justify-start h-auto p-4 whitespace-normal transition-all duration-300 quiz-option"
+    
+    if (!isAnswered) {
+      return `${baseClasses} hover:scale-[1.02] hover:shadow-lg`
+    }
+    
+    if (optionIndex === currentQuestion?.correctIndex) {
+      return `${baseClasses} quiz-correct`
+    }
+    
+    if (optionIndex === selectedAnswer && optionIndex !== currentQuestion?.correctIndex) {
+      return `${baseClasses} quiz-incorrect`
+    }
+    
+    return `${baseClasses} opacity-60`
+  }
+
+  const getOptionBorderColor = (index: number) => {
+    const colors = ['border-l-red-400', 'border-l-amber-400', 'border-l-green-400', 'border-l-purple-400']
+    return colors[index] || 'border-l-gray-400'
   }
 
   return (
     <div className="space-y-6">
       {/* Quiz Controls */}
-      <Card>
+      <Card className="quiz-card-enter">
         <CardHeader>
-          <CardTitle>Quiz Setup</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <Target className="w-5 h-5 text-blue-600" />
+            Quiz Setup
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
@@ -67,7 +152,7 @@ export default function QuizGenerator() {
               id="category"
               value={category}
               onChange={(e) => setCategory(e.target.value as any)}
-              className="w-full p-2 border border-gray-300 rounded-md"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
               disabled={loading || (questions.length > 0 && !isCompleted)}
             >
               {CATEGORIES.map((cat) => (
@@ -81,16 +166,26 @@ export default function QuizGenerator() {
           <Button
             onClick={() => loadQuestions(10)}
             disabled={loading || (questions.length > 0 && !isCompleted)}
-            className="w-full"
+            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-[1.02]"
           >
-            {loading ? "Loading Quiz..." : "Start New Quiz"}
+            {loading ? (
+              <>
+                <div className="quiz-loading w-4 h-4 mr-2 rounded-full"></div>
+                Loading Quiz...
+              </>
+            ) : (
+              <>
+                <Zap className="w-4 h-4 mr-2" />
+                Start New Quiz
+              </>
+            )}
           </Button>
         </CardContent>
       </Card>
 
       {/* Error Message */}
       {error && (
-        <Card className="border-red-200 bg-red-50">
+        <Card className="border-red-200 bg-red-50 quiz-card-enter">
           <CardContent className="pt-6">
             <div className="flex items-center text-red-700">
               <XCircle className="w-5 h-5 mr-2" />
@@ -102,25 +197,40 @@ export default function QuizGenerator() {
 
       {/* Quiz Progress */}
       {questions.length > 0 && (
-        <Card>
+        <Card className="quiz-card-enter">
           <CardContent className="pt-6">
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <h2 className="text-xl font-semibold">Quiz - {category}</h2>
-                <div className="text-sm text-gray-600">
+                <h2 className="text-xl font-semibold flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-purple-600" />
+                  Quiz - {category}
+                </h2>
+                <div className="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full">
                   Question {progress.current} of {progress.total}
                 </div>
               </div>
               
-              <Progress value={progress.percentage} className="w-full" />
+              <div className="relative">
+                <Progress 
+                  value={progress.percentage} 
+                  className="w-full h-3 quiz-progress-bar"
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 rounded-full opacity-20"></div>
+              </div>
               
-              <div className="flex items-center justify-between text-sm text-gray-600">
-                <div className="flex items-center">
-                  <Trophy className="w-4 h-4 mr-1" />
-                  Score: {score.correct}/{score.total}
+              <div className="flex items-center justify-between text-sm">
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center text-green-600">
+                    <Trophy className="w-4 h-4 mr-1" />
+                    <span className="font-semibold">Score: {score.correct}/{score.total}</span>
+                  </div>
+                  <div className="flex items-center text-blue-600">
+                    <Star className="w-4 h-4 mr-1" />
+                    <span>{score.total > 0 ? ((score.correct / score.total) * 100).toFixed(0) : 0}% Accuracy</span>
+                  </div>
                 </div>
                 {isCompleted && (
-                  <div className="flex items-center text-green-600">
+                  <div className="flex items-center text-green-600 quiz-score-celebration">
                     <CheckCircle className="w-4 h-4 mr-1" />
                     Quiz Completed!
                   </div>
@@ -133,29 +243,72 @@ export default function QuizGenerator() {
 
       {/* Current Question */}
       {currentQuestion && !isCompleted && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">
+        <Card key={questionKey} className="quiz-card-enter bg-gradient-to-br from-white to-blue-50 border border-blue-100">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-xl leading-relaxed flex items-start gap-3">
+              <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                {progress.current}
+              </div>
               {currentQuestion.question}
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
+            <div className="space-y-4">
               {currentQuestion.options.map((option, index) => (
                 <Button
                   key={index}
                   onClick={() => handleOptionClick(index)}
                   variant="outline"
-                  className="w-full text-left justify-start h-auto p-4 whitespace-normal"
+                  disabled={isAnswered}
+                  className={`
+                    ${getOptionClass(index)}
+                    ${getOptionBorderColor(index)} border-l-4
+                    text-gray-800 font-medium
+                  `}
                 >
-                  <span className="font-medium mr-2">{String.fromCharCode(65 + index)}.</span>
-                  {option}
+                  <div className="flex items-center gap-4 w-full">
+                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center text-sm font-bold">
+                      {String.fromCharCode(65 + index)}
+                    </span>
+                    <span className="flex-1 text-left">{option}</span>
+                    {isAnswered && index === currentQuestion.correctIndex && (
+                      <CheckCircle className="w-5 h-5 text-green-600 animate-bounce" />
+                    )}
+                    {isAnswered && index === selectedAnswer && index !== currentQuestion.correctIndex && (
+                      <XCircle className="w-5 h-5 text-red-600" />
+                    )}
+                  </div>
                 </Button>
               ))}
             </div>
             
-            <div className="mt-4 text-sm text-gray-500 italic">
-              Source: {currentQuestion.source}
+            {/* Feedback Message */}
+            {showFeedback && (
+              <div className="mt-6 text-center">
+                {selectedAnswer === currentQuestion.correctIndex ? (
+                  <div className="quiz-score-celebration bg-green-50 text-green-700 p-4 rounded-lg border border-green-200">
+                    <div className="flex items-center justify-center gap-2">
+                      <Sparkles className="w-5 h-5" />
+                      <span className="font-semibold text-lg">Excellent! That's correct! 🎉</span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="bg-red-50 text-red-700 p-4 rounded-lg border border-red-200">
+                    <div className="text-center">
+                      <span className="font-semibold">Not quite right!</span>
+                      <br />
+                      <span className="text-sm">The correct answer was: <strong>{currentQuestion.options[currentQuestion.correctIndex]}</strong></span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+            
+            <div className="mt-6 pt-4 border-t border-gray-200">
+              <div className="flex items-center gap-2 text-sm text-gray-500">
+                <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                <span className="italic">Source: {currentQuestion.source}</span>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -163,32 +316,33 @@ export default function QuizGenerator() {
 
       {/* Quiz Summary & Submit */}
       {isCompleted && (
-        <Card>
+        <Card className="quiz-complete-celebration">
           <CardHeader>
-            <CardTitle className="flex items-center">
-              <Trophy className="w-5 h-5 mr-2" />
-              Quiz Complete!
+            <CardTitle className="flex items-center text-2xl">
+              <Trophy className="w-8 h-8 mr-3 text-yellow-600" />
+              Quiz Complete! 🎉
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <div className="grid grid-cols-2 gap-4 text-center">
-                <div>
-                  <div className="text-2xl font-bold text-green-600">
+          <CardContent className="space-y-6">
+            <div className="bg-gradient-to-r from-yellow-50 to-orange-50 p-6 rounded-xl border border-yellow-200">
+              <div className="grid grid-cols-3 gap-6 text-center">
+                <div className="quiz-score-celebration">
+                  <div className="text-3xl font-bold text-green-600 mb-1">
                     {score.correct}
                   </div>
-                  <div className="text-sm text-gray-600">Correct</div>
+                  <div className="text-sm text-gray-600 font-medium">Correct</div>
                 </div>
-                <div>
-                  <div className="text-2xl font-bold text-gray-700">
+                <div className="quiz-score-celebration" style={{animationDelay: '0.2s'}}>
+                  <div className="text-3xl font-bold text-blue-600 mb-1">
                     {score.total}
                   </div>
-                  <div className="text-sm text-gray-600">Total</div>
+                  <div className="text-sm text-gray-600 font-medium">Total</div>
                 </div>
-              </div>
-              <div className="mt-4 text-center">
-                <div className="text-lg font-semibold">
-                  {((score.correct / score.total) * 100).toFixed(1)}% Accuracy
+                <div className="quiz-score-celebration" style={{animationDelay: '0.4s'}}>
+                  <div className="text-3xl font-bold text-purple-600 mb-1">
+                    {((score.correct / score.total) * 100).toFixed(0)}%
+                  </div>
+                  <div className="text-sm text-gray-600 font-medium">Accuracy</div>
                 </div>
               </div>
             </div>
@@ -200,12 +354,16 @@ export default function QuizGenerator() {
               </div>
             ) : isSubmitted ? (
               <div className="text-center space-y-4">
-                <div className="flex items-center justify-center text-green-600">
-                  <CheckCircle className="w-6 h-6 mr-2" />
-                  <span className="text-lg font-semibold">Score Submitted Successfully!</span>
+                <div className="flex items-center justify-center text-green-600 quiz-score-celebration">
+                  <CheckCircle className="w-8 h-8 mr-3" />
+                  <span className="text-xl font-semibold">Score Submitted Successfully!</span>
                 </div>
                 <p className="text-gray-600">Your score has been saved and the leaderboard has been updated.</p>
-                <Button onClick={startNewQuiz} className="w-full">
+                <Button 
+                  onClick={startNewQuiz} 
+                  className="bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-300 transform hover:scale-[1.05]"
+                >
+                  <Zap className="w-4 h-4 mr-2" />
                   Take Another Quiz
                 </Button>
               </div>
@@ -214,18 +372,18 @@ export default function QuizGenerator() {
                 <Button
                   onClick={handleSubmit}
                   disabled={!canSubmit() || submitting}
-                  className="w-full"
+                  className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-bold py-4 px-6 rounded-lg transition-all duration-300 transform hover:scale-[1.02]"
                   size="lg"
                 >
                   {submitting ? (
                     <>
-                      <Clock className="w-4 h-4 mr-2 animate-spin" />
+                      <Clock className="w-5 h-5 mr-2 animate-spin" />
                       Submitting...
                     </>
                   ) : (
                     <>
-                      <Trophy className="w-4 h-4 mr-2" />
-                      Submit Score
+                      <Trophy className="w-5 h-5 mr-2" />
+                      Submit Score & Celebrate!
                     </>
                   )}
                 </Button>

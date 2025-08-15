@@ -6,7 +6,7 @@ export type QuestionDto = {
     id?: string;
     question?: string | null;
     options?: Array<string> | null;
-    correctIndex?: number;
     source?: string | null;
+    correctIndex?: number;
 };
 
