@@ -3,9 +3,7 @@ import { signIn } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 import { CardContent, CardHeader } from "@/components/ui/card"
 import { Github } from "lucide-react"
-import styles from "./LoginForm.module.scss"
 
-//LoginForm component
 export function LoginForm() {
   const handleGithubLogin = async () => {
     await signIn("github", { redirectTo: "/" })
@@ -14,17 +12,17 @@ export function LoginForm() {
   return (
     <>
       <CardHeader>
-        <h1 className={styles.title}>Welcome Back</h1>
-        <p className={styles.subtitle}>Sign in to your account to continue</p>
+        <h1 className="text-center text-3xl font-semibold tracking-tight">Welcome Back</h1>
+        <p className="text-center mt-2 text-muted-foreground">Sign in to your account to continue</p>
       </CardHeader>
       <CardContent>
         <Button 
           variant="outline" 
-          className={styles.githubButton}
+          className="w-full flex items-center justify-center gap-2 h-11 hover:bg-accent"
           onClick={handleGithubLogin}
           aria-label="Sign in with GitHub"
         >
-          <Github className={styles.githubIcon} />
+          <Github className="w-5 h-5" />
           Sign in with GitHub
         </Button>
       </CardContent>

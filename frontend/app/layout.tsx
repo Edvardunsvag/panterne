@@ -4,12 +4,11 @@ import { Inter } from "next/font/google"
 import "./globals.css"
 import { Navbar } from "@/components/layout/Navbar"
 import { SessionWrapper } from "@/components/SessionWrapper"
-import styles from "./layout.module.scss"
 
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "OpenAI Quiz Generator",
+  title: "Panterne Quiz Generator",
   description: "Generate random quiz questions using OpenAI",
   generator: 'v0.dev'
 }
@@ -21,11 +20,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
+      <body className={inter.className}>
         <SessionWrapper>
-          <div className={styles.layout}>
+          <div className="min-h-screen flex flex-col">
             <Navbar />
-            <main className={styles.main}>
+            <main className="flex-1 w-full max-w-6xl mx-auto px-4 py-8">
               {children}
             </main>
           </div>

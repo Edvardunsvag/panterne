@@ -1,23 +1,27 @@
 import { auth } from "@/auth"
 import { SignOutButton } from "@/components/auth/SignOutButton"
-import styles from "./Navbar.module.scss"
 
 export async function Navbar() {
   const session = await auth()
 
   return (
-    <nav className={styles.navbar}>
-      <div className={styles.content}>
-        <div className={styles.logo}>
-          Quiz Generator
+    <nav className="w-full h-16 border-b border-border bg-background">
+      <div className="max-w-6xl h-full mx-auto px-4 flex items-center justify-between">
+        <div className="text-xl font-semibold">
+          Panterne Quiz 🐭
         </div>
         
-        <div className={styles.actions}>
+        <div className="flex items-center gap-4">
           {session && (
-            <SignOutButton 
-              userImage={session.user?.image}
-              userEmail={session.user?.email}
-            />
+            <div className="flex items-center gap-4">
+              <span className="text-muted-foreground text-sm">
+                {session.user?.email}
+              </span>
+              <SignOutButton 
+                userImage={session.user?.image}
+                userEmail={session.user?.email}
+              />
+            </div>
           )}
         </div>
       </div>
