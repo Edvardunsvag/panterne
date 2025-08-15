@@ -8,4 +8,5 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     url: process.env.NEXT_PUBLIC_SUPABASE_URL!,
     secret: process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY!,
   }),
+  trustHost: true,
 })
