@@ -7,7 +7,7 @@ import { Progress } from "@/components/ui/progress"
 import { useSession } from "next-auth/react"
 import SignInButton from "@/components/features/auth/components/SignInButton"
 import { CheckCircle, XCircle, Trophy, Clock, Sparkles, Zap, Target, Star } from "lucide-react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 
 /**
  * Enhanced QuizGenerator component with animations and visual feedback
@@ -39,6 +39,7 @@ export default function QuizGenerator() {
   const [isAnswered, setIsAnswered] = useState(false)
   const [showFeedback, setShowFeedback] = useState(false)
   const [questionKey, setQuestionKey] = useState(0)
+  const optionRefs = useRef<(HTMLButtonElement | null)[]>([])
 
   const currentQuestion = getCurrentQuestion()
   const progress = getProgress()
@@ -49,6 +50,7 @@ export default function QuizGenerator() {
     setIsAnswered(false)
     setShowFeedback(false)
     setQuestionKey(prev => prev + 1)
+    optionRefs.current = []
   }, [currentQuestionIndex])
 
   const handleOptionClick = (optionIndex: number) => {
@@ -60,9 +62,10 @@ export default function QuizGenerator() {
 
     const isCorrect = optionIndex === currentQuestion?.correctIndex
 
-    // Create confetti for correct answers
+    // Create confetti for correct answers from the button
     if (isCorrect) {
-      createConfetti()
+      const correctButton = optionRefs.current[currentQuestion.correctIndex]
+      createConfettiFromButton(correctButton)
     }
 
     // Delay moving to next question to show feedback
@@ -72,7 +75,13 @@ export default function QuizGenerator() {
     }, 1500)
   }
 
-  const createConfetti = () => {
+  const createConfettiFromButton = (buttonElement: HTMLButtonElement | null) => {
+    if (!buttonElement) return
+
+    const buttonRect = buttonElement.getBoundingClientRect()
+    const buttonCenterX = buttonRect.left + buttonRect.width / 2
+    const buttonCenterY = buttonRect.top + buttonRect.height / 2
+
     const confettiContainer = document.createElement('div')
     confettiContainer.style.position = 'fixed'
     confettiContainer.style.top = '0'
@@ -82,7 +91,69 @@ export default function QuizGenerator() {
     confettiContainer.style.pointerEvents = 'none'
     confettiContainer.style.zIndex = '1000'
     
-    for (let i = 0; i < 30; i++) {
+    // Create confetti pieces that burst out from the button
+    for (let i = 0; i < 50; i++) {
+      const confetti = document.createElement('div')
+      confetti.className = 'confetti-piece confetti-burst'
+      
+      // Start from button center
+      const startX = buttonCenterX
+      const startY = buttonCenterY
+      
+      // Create burst pattern - random angles in full circle
+      const angle = (Math.random() * 360) * (Math.PI / 180)
+      const distance = Math.random() * 200 + 100 // 100-300px burst radius
+      const velocity = Math.random() * 300 + 200 // Initial velocity
+      
+      // Calculate burst end position (where confetti reaches peak of arc)
+      const burstEndX = startX + Math.cos(angle) * distance
+      const burstEndY = startY + Math.sin(angle) * distance
+      
+      // Final fall position (gravity takes over)
+      const fallEndX = burstEndX + (Math.random() - 0.5) * 100
+      const fallEndY = window.innerHeight + 50
+      
+      // Set CSS custom properties for the animation
+      confetti.style.setProperty('--start-x', startX + 'px')
+      confetti.style.setProperty('--start-y', startY + 'px')
+      confetti.style.setProperty('--burst-x', burstEndX + 'px')
+      confetti.style.setProperty('--burst-y', burstEndY + 'px')
+      confetti.style.setProperty('--fall-x', fallEndX + 'px')
+      confetti.style.setProperty('--fall-y', fallEndY + 'px')
+      
+      // Random timing for more natural effect
+      confetti.style.animationDelay = Math.random() * 0.3 + 's'
+      confetti.style.animationDuration = (Math.random() * 1 + 2.5) + 's'
+      
+      // Random rotation speed
+      const rotationSpeed = (Math.random() - 0.5) * 1440 // -720 to +720 degrees
+      confetti.style.setProperty('--rotation', rotationSpeed + 'deg')
+      
+      confettiContainer.appendChild(confetti)
+    }
+    
+    document.body.appendChild(confettiContainer)
+    
+    // Clean up after animation
+    setTimeout(() => {
+      if (document.body.contains(confettiContainer)) {
+        document.body.removeChild(confettiContainer)
+      }
+    }, 4000)
+  }
+
+  const createConfetti = () => {
+    // Fallback confetti for quiz completion
+    const confettiContainer = document.createElement('div')
+    confettiContainer.style.position = 'fixed'
+    confettiContainer.style.top = '0'
+    confettiContainer.style.left = '0'
+    confettiContainer.style.width = '100%'
+    confettiContainer.style.height = '100%'
+    confettiContainer.style.pointerEvents = 'none'
+    confettiContainer.style.zIndex = '1000'
+    
+    for (let i = 0; i < 50; i++) {
       const confetti = document.createElement('div')
       confetti.className = 'confetti-piece'
       confetti.style.left = Math.random() * 100 + '%'
@@ -257,6 +328,11 @@ export default function QuizGenerator() {
               {currentQuestion.options.map((option, index) => (
                 <Button
                   key={index}
+                  ref={(el) => {
+                    if (optionRefs.current) {
+                      optionRefs.current[index] = el
+                    }
+                  }}
                   onClick={() => handleOptionClick(index)}
                   variant="outline"
                   disabled={isAnswered}
@@ -398,4 +474,3 @@ export default function QuizGenerator() {
     </div>
   )
 }
-
