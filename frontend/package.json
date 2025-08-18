@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "node .next/standalone/server.js",
+    "start": "node server.js",
     "start:standalone": "if [ ! -d '.next/standalone' ]; then echo 'Error: .next/standalone directory not found. Build may have failed.'; exit 1; fi && cp -r public .next/standalone/ && cp -r .next/static .next/standalone/.next/ && node .next/standalone/server.js",
     "lint": "next lint",
     "generate-api": "openapi --input http://localhost:5000/swagger/v1/swagger.json --output ./lib/generated/client --client fetch"
