@@ -47,10 +47,22 @@ jobs:
             exit 1
           fi
           
+          # Verify server.js exists
+          if [ ! -f ".next/standalone/server.js" ]; then
+            echo "Error: server.js not found in standalone build"
+            echo "Contents of .next/standalone:"
+            ls -la .next/standalone/
+            exit 1
+          fi
+          
           # Copy public files to standalone directory
           cp -r public .next/standalone/
           # Copy static files to standalone directory  
           cp -r .next/static .next/standalone/.next/
+          
+          # List final structure for debugging
+          echo "Final standalone structure:"
+          find .next/standalone -name "server.js" -o -name "package.json" | head -10
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
