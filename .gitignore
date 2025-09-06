@@ -26,6 +26,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# backend
-/backend/QuizApi/
-appsettings.Local.json
+# .NET backend
+backend/QuizApi/bin/
+backend/QuizApi/obj/
+backend/QuizApi/appsettings*.json
