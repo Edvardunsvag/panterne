@@ -2,14 +2,15 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type LeaderboardEntryDto = {
-    userName?: string | null;
-    avatarUrl?: string | null;
+export type QuizSessionDto = {
+    id?: string;
+    category?: string | null;
+    startedAt?: string;
+    completedAt?: string | null;
+    totalQuestions?: number;
+    correctAnswers?: number;
     totalScore?: number;
-    questionsAnswered?: number;
     accuracyPercentage?: number;
-    rank?: number;
-    completedAt?: string;
     timeSpentSeconds?: number;
 };
 

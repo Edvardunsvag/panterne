@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { QuizSessionDto } from '../models/QuizSessionDto';
 import type { SyncUserDto } from '../models/SyncUserDto';
 import type { UserDto } from '../models/UserDto';
 import type { UserScoreDto } from '../models/UserScoreDto';
@@ -59,6 +60,27 @@ export class UserService {
             url: '/api/User/{userId}/scores',
             path: {
                 'userId': userId,
+            },
+        });
+    }
+    /**
+     * @param userId
+     * @param category
+     * @returns QuizSessionDto Success
+     * @throws ApiError
+     */
+    public static getApiUserQuizSessions(
+        userId: string,
+        category?: string,
+    ): CancelablePromise<Array<QuizSessionDto>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/User/{userId}/quiz-sessions',
+            path: {
+                'userId': userId,
+            },
+            query: {
+                'category': category,
             },
         });
     }

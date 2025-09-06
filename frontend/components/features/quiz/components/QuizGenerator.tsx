@@ -117,7 +117,7 @@ export default function QuizGenerator() {
           </div>
           
           <Button
-            onClick={() => loadQuestions(10)}
+            onClick={() => loadQuestions(category as any)}
             disabled={loading || (questions.length > 0 && !isCompleted)}
             className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-[1.02]"
           >
@@ -159,13 +159,13 @@ export default function QuizGenerator() {
                   Quiz - {category}
                 </h2>
                 <div className="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full">
-                  Question {progress.current} of {progress.total}
+                  Question {currentQuestionIndex + 1} of {questions.length}
                 </div>
               </div>
               
               <div className="relative">
                 <Progress 
-                  value={progress.percentage} 
+                  value={progress} 
                   className="w-full h-3 quiz-progress-bar"
                 />
                 <div className="absolute inset-0 bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 rounded-full opacity-20"></div>
@@ -200,7 +200,7 @@ export default function QuizGenerator() {
           <CardHeader className="pb-4">
             <CardTitle className="text-xl leading-relaxed flex items-start gap-3">
               <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                {progress.current}
+                {currentQuestionIndex + 1}
               </div>
               {currentQuestion.question}
             </CardTitle>

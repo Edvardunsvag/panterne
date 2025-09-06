@@ -7,10 +7,13 @@ export { CancelablePromise, CancelError } from './core/CancelablePromise';
 export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
+export type { AllTimePodiumStatsDto } from './models/AllTimePodiumStatsDto';
+export type { DailyLeaderboardDto } from './models/DailyLeaderboardDto';
 export type { LeaderboardEntryDto } from './models/LeaderboardEntryDto';
 export type { ProblemDetails } from './models/ProblemDetails';
 export type { QuestionDto } from './models/QuestionDto';
 export type { QuizAttemptDto } from './models/QuizAttemptDto';
+export type { QuizSessionDto } from './models/QuizSessionDto';
 export type { SubmitQuizResultDto } from './models/SubmitQuizResultDto';
 export type { SubmitQuizWithUserDto } from './models/SubmitQuizWithUserDto';
 export type { SyncUserDto } from './models/SyncUserDto';

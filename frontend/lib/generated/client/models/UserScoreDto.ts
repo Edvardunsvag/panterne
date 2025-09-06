@@ -9,6 +9,7 @@ export type UserScoreDto = {
     questionsAnswered?: number;
     correctAnswers?: number;
     accuracyPercentage?: number;
-    lastUpdated?: string;
+    completedAt?: string;
+    timeSpentSeconds?: number;
 };
 

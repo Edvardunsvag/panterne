@@ -5,5 +5,6 @@
 import type { QuizAttemptDto } from './QuizAttemptDto';
 export type SubmitQuizResultDto = {
     attempts?: Array<QuizAttemptDto> | null;
+    category?: string | null;
 };
 

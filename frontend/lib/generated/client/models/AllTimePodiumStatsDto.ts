@@ -2,14 +2,14 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type LeaderboardEntryDto = {
+export type AllTimePodiumStatsDto = {
     userName?: string | null;
     avatarUrl?: string | null;
-    totalScore?: number;
-    questionsAnswered?: number;
-    accuracyPercentage?: number;
+    firstPlaceCount?: number;
+    secondPlaceCount?: number;
+    thirdPlaceCount?: number;
+    totalPodiums?: number;
+    weightedScore?: number;
     rank?: number;
-    completedAt?: string;
-    timeSpentSeconds?: number;
 };
 

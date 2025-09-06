@@ -1,21 +1,38 @@
 // Use the generated client and types
 import { 
   QuizService, 
-  UserService, 
-  ScoreService,
-  QuestionDto, 
+  ScoreService, 
+  UserService,
+  QuestionDto,
+  QuizAttemptDto,
+  LeaderboardEntryDto,
+  SubmitQuizWithUserDto,
   UserDto,
   UserScoreDto,
-  QuizAttemptDto,
-  SubmitQuizResultDto,
-  SubmitQuizWithUserDto,
-  SyncUserDto,
-  LeaderboardEntryDto,
-  OpenAPI 
+  DailyLeaderboardDto,
+  AllTimePodiumStatsDto
 } from './generated/client';
+import './api-config'; // Import to configure the API client
 
 // Configure the base URL
-OpenAPI.BASE = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000';
+// OpenAPI.BASE = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000';
+
+export interface QuizSessionDto {
+  id: string;
+  category: string;
+  startedAt: string;
+  completedAt?: string;
+  totalQuestions: number;
+  correctAnswers: number;
+  totalScore: number;
+  accuracyPercentage: number;
+  timeSpentSeconds: number;
+}
+
+export interface ExtendedLeaderboardEntryDto extends LeaderboardEntryDto {
+  rank?: number;
+  timeSpentSeconds?: number;
+}
 
 export interface ApiResponse<T> {
   data?: T;
@@ -23,101 +40,120 @@ export interface ApiResponse<T> {
 }
 
 class ApiClient {
-  /**
-   * Get recent questions by category using the generated client
-   */
+  private baseUrl: string;
+
+  constructor() {
+    this.baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://localhost:7000';
+  }
+
+  // Quiz methods
   async getRecentQuestionsByCategory(
     category: string,
     count: number = 10
   ): Promise<ApiResponse<QuestionDto[]>> {
     try {
-      const data = await QuizService.getApiQuizRecent(category, count);
-      return { data };
+      const questions = await QuizService.getApiQuizRecent(category, count);
+      return { data: questions };
     } catch (error) {
-      console.error('API request failed:', error);
-      return {
-        error: error instanceof Error ? error.message : 'An unexpected error occurred'
-      };
+      return { error: error instanceof Error ? error.message : 'Failed to fetch questions' };
     }
   }
 
-  /**
-   * Sync user with backend (create or update)
-   */
-  async syncUser(syncUserDto: SyncUserDto): Promise<ApiResponse<UserDto>> {
+  async getDailyGenerationStatus(category: string): Promise<ApiResponse<{ isGenerated: boolean; questionsGenerated: number }>> {
     try {
-      const data = await UserService.postApiUserSync(syncUserDto);
-      return { data };
+      const status = await QuizService.getApiQuizRecent(category);
+      return { data: { isGenerated: true, questionsGenerated: status.length } };
     } catch (error) {
-      console.error('Sync user failed:', error);
-      return {
-        error: error instanceof Error ? error.message : 'Failed to sync user'
-      };
+      return { error: error instanceof Error ? error.message : 'Failed to fetch daily status' };
     }
   }
 
-  /**
-   * Get user by GitHub ID
-   */
+  // User methods
+  async syncUser(userData: { gitHubId: string; email: string; name: string; avatarUrl: string }): Promise<ApiResponse<UserDto>> {
+    try {
+      const user = await UserService.postApiUserSync({
+        gitHubId: userData.gitHubId,
+        email: userData.email,
+        name: userData.name,
+        avatarUrl: userData.avatarUrl
+      });
+      return { data: user };
+    } catch (error) {
+      return { error: error instanceof Error ? error.message : 'Failed to sync user' };
+    }
+  }
+
   async getUserByGitHubId(gitHubId: string): Promise<ApiResponse<UserDto>> {
     try {
-      const data = await UserService.getApiUser(gitHubId);
-      return { data };
+      const user = await UserService.getApiUser(gitHubId);
+      return { data: user };
     } catch (error) {
-      console.error('Get user failed:', error);
-      if (error instanceof Error && error.message.includes('404')) {
-        return { error: 'User not found' };
-      }
-      return {
-        error: error instanceof Error ? error.message : 'Failed to get user'
-      };
+      return { error: error instanceof Error ? error.message : 'Failed to fetch user' };
     }
   }
 
-  /**
-   * Get user scores
-   */
   async getUserScores(userId: string): Promise<ApiResponse<UserScoreDto[]>> {
     try {
-      const data = await UserService.getApiUserScores(userId);
-      return { data };
+      const scores = await UserService.getApiUserScores(userId);
+      return { data: scores };
     } catch (error) {
-      console.error('Get user scores failed:', error);
-      return {
-        error: error instanceof Error ? error.message : 'Failed to get user scores'
-      };
+      return { error: error instanceof Error ? error.message : 'Failed to fetch user scores' };
     }
   }
 
-  /**
-   * Submit quiz result using the generated client
-   */
+  async getUserQuizSessions(userId: string, category?: string): Promise<ApiResponse<QuizSessionDto[]>> {
+    try {
+      const sessions = await UserService.getApiUserQuizSessions(userId, category);
+      return { data: sessions };
+    } catch (error) {
+      return { error: error instanceof Error ? error.message : 'Failed to fetch user quiz sessions' };
+    }
+  }
+
+  // Score methods
   async submitQuizResult(submitDto: SubmitQuizWithUserDto): Promise<ApiResponse<{ message: string }>> {
     try {
-      console.log('Submitting quiz result:', JSON.stringify(submitDto, null, 2));
-      
-      const data = await ScoreService.postApiScoreSubmit(submitDto);
-      return { data };
+      await ScoreService.postApiScoreSubmit(submitDto);
+      return { data: { message: 'Quiz result submitted successfully' } };
     } catch (error) {
-      console.error('Submit quiz result failed:', error);
-      return {
-        error: error instanceof Error ? error.message : 'Failed to submit quiz result'
-      };
+      return { error: error instanceof Error ? error.message : 'Failed to submit quiz result' };
     }
   }
 
-  /**
-   * Get leaderboard for category
-   */
+  // Leaderboard methods
   async getLeaderboard(category: string, limit: number = 10): Promise<ApiResponse<LeaderboardEntryDto[]>> {
     try {
-      const data = await ScoreService.getApiScoreLeaderboard(category, limit);
-      return { data };
+      const leaderboard = await ScoreService.getApiScoreLeaderboard(category, limit);
+      return { data: leaderboard };
     } catch (error) {
-      console.error('Get leaderboard failed:', error);
-      return {
-        error: error instanceof Error ? error.message : 'Failed to get leaderboard'
-      };
+      return { error: error instanceof Error ? error.message : 'Failed to fetch leaderboard' };
+    }
+  }
+
+  async getDailyLeaderboard(category: string, date?: string, limit: number = 10): Promise<ApiResponse<LeaderboardEntryDto[]>> {
+    try {
+      const leaderboard = await ScoreService.getApiScoreLeaderboardDaily(category, date, limit);
+      return { data: leaderboard };
+    } catch (error) {
+      return { error: error instanceof Error ? error.message : 'Failed to fetch daily leaderboard' };
+    }
+  }
+
+  async getHistoricalLeaderboards(category: string, days: number = 7): Promise<ApiResponse<DailyLeaderboardDto[]>> {
+    try {
+      const historicalLeaderboards = await ScoreService.getApiScoreLeaderboardHistorical(category, days);
+      return { data: historicalLeaderboards };
+    } catch (error) {
+      return { error: error instanceof Error ? error.message : 'Failed to fetch historical leaderboards' };
+    }
+  }
+
+  async getAllTimePodiumStats(category: string, limit: number = 10): Promise<ApiResponse<AllTimePodiumStatsDto[]>> {
+    try {
+      const podiumStats = await ScoreService.getApiScorePodiumStats(category, limit);
+      return { data: podiumStats };
+    } catch (error) {
+      return { error: error instanceof Error ? error.message : 'Failed to fetch podium stats' };
     }
   }
 }
@@ -130,8 +166,8 @@ export type {
   UserDto,
   UserScoreDto,
   QuizAttemptDto,
-  SubmitQuizResultDto,
   SubmitQuizWithUserDto,
-  SyncUserDto,
-  LeaderboardEntryDto
+  LeaderboardEntryDto,
+  DailyLeaderboardDto,
+  AllTimePodiumStatsDto
 }; 
