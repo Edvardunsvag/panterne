@@ -5,13 +5,12 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "node server.js",
+    "start": "node .next/standalone/server.js",
     "start:standalone": "if [ ! -d '.next/standalone' ]; then echo 'Error: .next/standalone directory not found. Build may have failed.'; exit 1; fi && cp -r public .next/standalone/ && cp -r .next/static .next/standalone/.next/ && node .next/standalone/server.js",
     "lint": "next lint",
     "generate-api": "openapi --input http://localhost:5000/swagger/v1/swagger.json --output ./lib/generated/client --client fetch"
   },
   "dependencies": {
-    "@auth/supabase-adapter": "^1.8.0",
     "@hookform/resolvers": "^3.9.1",
     "@radix-ui/react-accordion": "^1.2.2",
     "@radix-ui/react-alert-dialog": "^1.1.4",
@@ -40,7 +39,7 @@
     "@radix-ui/react-toggle": "^1.1.1",
     "@radix-ui/react-toggle-group": "^1.1.1",
     "@radix-ui/react-tooltip": "^1.1.6",
-    "@supabase/supabase-js": "^2.49.1",
+    "@supabase/supabase-js": "^2.57.2",
     "autoprefixer": "^10.4.20",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -50,7 +49,6 @@
     "input-otp": "1.4.1",
     "lucide-react": "^0.454.0",
     "next": "14.2.16",
-    "next-auth": "^5.0.0-beta.25",
     "next-themes": "^0.4.4",
     "react": "^18",
     "react-day-picker": "8.10.1",
@@ -66,13 +64,13 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.7.0",
     "@types/node": "^22",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "openapi-typescript": "^6.7.4",
     "postcss": "^8",
     "tailwindcss": "^3.4.17",
-    "typescript": "^5",
-    "openapi-typescript": "^6.7.4",
-    "@openapitools/openapi-generator-cli": "^2.7.0"
+    "typescript": "^5"
   }
 }

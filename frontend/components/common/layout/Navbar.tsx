@@ -1,8 +1,9 @@
-import { auth } from "@/auth"
+'use client'
+import { useAuth } from "@/lib/auth-context"
 import { SignOutButton } from "@/components/features/auth/components/SignOutButton"
 
-export async function Navbar() {
-  const session = await auth()
+export function Navbar() {
+  const { user } = useAuth()
 
   return (
     <nav className="w-full h-16 border-b border-border bg-background">
@@ -12,15 +13,12 @@ export async function Navbar() {
         </div>
         
         <div className="flex items-center gap-4">
-          {session && (
+          {user && (
             <div className="flex items-center gap-4">
               <span className="text-muted-foreground text-sm">
-                {session.user?.email}
+                {user.email}
               </span>
-              <SignOutButton 
-                userImage={session.user?.image}
-                userEmail={session.user?.email}
-              />
+              <SignOutButton />
             </div>
           )}
         </div>

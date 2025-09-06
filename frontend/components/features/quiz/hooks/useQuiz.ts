@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useSession } from "next-auth/react";
+import { useAuth } from "@/lib/auth-context";
 import { apiClient, QuestionDto, QuizAttemptDto } from "@/lib/api-client";
 import { useQuizScoring } from "./useQuizScoring";
 import { useUser } from "@/components/features/user/hooks/useUser";
@@ -23,7 +23,7 @@ interface QuizState {
 }
 
 export const useQuiz = () => {
-  const { data: session } = useSession();
+  const { user: authUser } = useAuth();
   const { submitQuizResult, submitting } = useQuizScoring();
   const { user, refreshUserScores } = useUser();
   
@@ -95,7 +95,7 @@ export const useQuiz = () => {
   };
 
   const submitQuiz = async () => {
-    if (!session?.user || !user || state.attempts.length === 0) {
+    if (!authUser || !user || state.attempts.length === 0) {
       setState(prev => ({
         ...prev,
         error: 'Please complete the quiz before submitting.'
@@ -104,7 +104,7 @@ export const useQuiz = () => {
     }
 
     try {
-      const gitHubId = (session as any).user.id || session.user.email || '';
+      const gitHubId = authUser.id || authUser.email || '';
       
       const success = await submitQuizResult(gitHubId, state.attempts);
       

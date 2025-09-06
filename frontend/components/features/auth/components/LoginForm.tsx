@@ -1,13 +1,11 @@
 'use client'
-import { signIn } from "next-auth/react"
+import { useAuth } from "@/lib/auth-context"
 import { Button } from "@/components/ui/button"
 import { CardContent, CardHeader } from "@/components/ui/card"
 import { Github } from "lucide-react"
 
 export function LoginForm() {
-  const handleGithubLogin = async () => {
-    await signIn("github", { redirectTo: "/" })
-  }
+  const { signInWithGitHub } = useAuth()
 
   return (
     <>
@@ -19,7 +17,7 @@ export function LoginForm() {
         <Button 
           variant="outline" 
           className="w-full flex items-center justify-center gap-2 h-11 hover:bg-accent"
-          onClick={handleGithubLogin}
+          onClick={signInWithGitHub}
           aria-label="Sign in with GitHub"
         >
           <Github className="w-5 h-5" />

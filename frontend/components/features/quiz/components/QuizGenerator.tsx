@@ -4,7 +4,7 @@ import { useQuiz } from "@/components/features/quiz/hooks/useQuiz"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
-import { useSession } from "next-auth/react"
+import { useAuth } from "@/lib/auth-context"
 import SignInButton from "@/components/features/auth/components/SignInButton"
 import { CheckCircle, XCircle, Trophy, Clock, Sparkles, Zap, Target, Star } from "lucide-react"
 import { useState, useEffect, useRef } from "react"
@@ -14,7 +14,7 @@ import { createConfetti, createConfettiFromButton, getOptionBorderColor, getOpti
  * Enhanced QuizGenerator component with animations and visual feedback
  */
 export default function QuizGenerator() {
-  const { data: session } = useSession()
+  const { user } = useAuth()
   const {
     questions,
     loading,
@@ -82,8 +82,6 @@ export default function QuizGenerator() {
       createConfetti()
     }
   }
-
-  
 
   return (
     <div className="space-y-6">
@@ -307,7 +305,7 @@ export default function QuizGenerator() {
               </div>
             </div>
 
-            {!session ? (
+            {!user ? (
               <div className="text-center space-y-4">
                 <p className="text-gray-600">Sign in to save your score and compete on the leaderboard!</p>
                 <SignInButton />

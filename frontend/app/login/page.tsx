@@ -1,13 +1,21 @@
-import { auth } from "@/auth"
+'use client'
+import { useAuth } from "@/lib/auth-context"
 import { redirect } from "next/navigation"
 import { LoginForm } from "@/components/features/auth/components/LoginForm"
 import { Card } from "@/components/ui/card"
+import { useEffect } from "react"
 
-export default async function LoginPage() {
-  const session = await auth()
+export default function LoginPage() {
+  const { user, loading } = useAuth()
   
-  if (session) {
-    redirect("/")
+  useEffect(() => {
+    if (!loading && user) {
+      redirect("/")
+    }
+  }, [user, loading])
+
+  if (loading) {
+    return <div>Loading...</div>
   }
 
   return (

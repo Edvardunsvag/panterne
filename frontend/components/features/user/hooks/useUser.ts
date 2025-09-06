@@ -1,28 +1,28 @@
 import { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/react';
+import { useAuth } from '@/lib/auth-context';
 import { apiClient, UserDto, UserScoreDto } from '@/lib/api-client';
 
 export const useUser = () => {
-  const { data: session } = useSession();
+  const { user: authUser } = useAuth();
   const [user, setUser] = useState<UserDto | null>(null);
   const [userScores, setUserScores] = useState<UserScoreDto[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const syncUser = async () => {
-    if (!session?.user) return;
+    if (!authUser) return;
 
     setLoading(true);
     setError(null);
 
     try {
-      const gitHubId = (session as any).user.id || session.user.email || '';
+      const gitHubId = authUser.id || authUser.email || '';
       
       const syncResult = await apiClient.syncUser({
         gitHubId,
-        email: session.user.email || '',
-        name: session.user.name || '',
-        avatarUrl: session.user.image || ''
+        email: authUser.email || '',
+        name: authUser.user_metadata?.full_name || authUser.user_metadata?.name || '',
+        avatarUrl: authUser.user_metadata?.avatar_url || ''
       });
 
       if (syncResult.error) {
@@ -52,10 +52,10 @@ export const useUser = () => {
   };
 
   useEffect(() => {
-    if (session?.user) {
+    if (authUser) {
       syncUser();
     }
-  }, [session]);
+  }, [authUser]);
 
   return {
     user,
