@@ -26,8 +26,14 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)
     {
+        var connectionString = configuration.GetConnectionString("DefaultConnection");
+        
+        // Log the connection string (mask sensitive parts)
+        var maskedConnectionString = connectionString?.Replace("Password=", "Password=***").Replace("User ID=", "User ID=***");
+        Console.WriteLine($"DefaultConnection: {maskedConnectionString}");
+        
         services.AddDbContext<QuizDbContext>(options =>
-            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+            options.UseSqlServer(connectionString));
         
         return services;
     }
