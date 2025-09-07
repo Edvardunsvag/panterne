@@ -104,7 +104,7 @@ public class QuizScoreService : IQuizScoreService
             }
         }
 
-        // Update quiz session with final results
+        // Update quiz  session with final results
         var correctAnswers = attempts.Count(a => a.IsCorrect);
         var totalQuestions = attempts.Count;
         var totalScore = correctAnswers * 10; 
