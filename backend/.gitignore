@@ -10,7 +10,9 @@
 # .NET backend
 /QuizApi/bin/
 /QuizApi/obj/
-/QuizApi/appsettings*.json
+/QuizApi/appsettings.json
+/QuizApi/appsettings.Development.json
+/QuizApi/appsettings.Local.json
 
 # production
 /build

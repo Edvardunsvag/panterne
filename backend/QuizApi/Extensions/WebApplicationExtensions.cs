@@ -18,13 +18,6 @@ public static class WebApplicationExtensions
 
     public static WebApplication ConfigureMiddleware(this WebApplication app)
     {
-        // CORS must be configured before other middleware
-        if(app.Environment.IsDevelopment()){
-            app.UseCors("AllowAll"); // Use permissive policy for development
-        } else {
-            app.UseCors("AllowAll"); // Use permissive policy for development
-        }
-
         app.UseHttpsRedirection();
         app.UseAuthorization();
         
@@ -33,6 +26,7 @@ public static class WebApplicationExtensions
 
     public static WebApplication ConfigureHangfire(this WebApplication app)
     {
+        // Always enable dashboard (not recommended for production)
         app.UseHangfireDashboard();
         app.ConfigureHangfireJobs();
         

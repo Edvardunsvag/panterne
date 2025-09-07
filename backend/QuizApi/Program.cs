@@ -20,21 +20,39 @@ builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddApplicationServices();
 builder.Services.AddHangfireServices(builder.Configuration);
 
-// Add CORS directly here
+// Add CORS with environment-specific configuration
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
     {
-        policy.AllowAnyOrigin()
-              .AllowAnyHeader()
-              .AllowAnyMethod();
+        if (builder.Environment.IsDevelopment())
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        }
+        else
+        {
+            // In production, specify allowed origins
+            policy.WithOrigins("https://your-frontend-domain.com")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        }
     });
 });
 
 var app = builder.Build();
 
-// Setup database
-await app.SetupDatabaseAsync();
+// Setup database with better error handling
+try
+{
+    await app.SetupDatabaseAsync();
+}
+catch (Exception ex)
+{
+    logger.LogError(ex, "Failed to setup database. Application will continue but database operations may fail.");
+    // Don't throw here to allow the app to start even if DB setup fails
+}
 
 // Configure the HTTP request pipeline
 app.ConfigureSwagger();
