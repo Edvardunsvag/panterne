@@ -104,7 +104,7 @@ class ApiClient {
   async getUserQuizSessions(userId: string, category?: string): Promise<ApiResponse<QuizSessionDto[]>> {
     try {
       const sessions = await UserService.getApiUserQuizSessions(userId, category);
-      return { data: sessions };
+      return { data: sessions as QuizSessionDto[] };
     } catch (error) {
       return { error: error instanceof Error ? error.message : 'Failed to fetch user quiz sessions' };
     }
