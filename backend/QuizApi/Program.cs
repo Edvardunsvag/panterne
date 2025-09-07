@@ -5,6 +5,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Add local configuration file
 builder.Configuration.AddJsonFile("appsettings.Local.json", optional: true, reloadOnChange: true);
 
+// Log connection string for debugging
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var maskedConnectionString = connectionString?.Replace("Password=", "Password=***").Replace("User ID=", "User ID=***");
+builder.Services.AddLogging(logging => logging.AddConsole());
+var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<Program>>();
+logger.LogInformation("DefaultConnection: {ConnectionString}", maskedConnectionString);
+
 // Add services to the container
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
