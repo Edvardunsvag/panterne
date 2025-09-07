@@ -24,7 +24,7 @@ public class QuizScoreService : IQuizScoreService
             UserId = userId,
             Category = category,
             StartedAt = DateTime.UtcNow,
-            Date = DateTime.UtcNow.Date, // Set the date for daily grouping
+            Date = DateTime.UtcNow.Date,
             TotalQuestions = 0,
             CorrectAnswers = 0,
             TotalScore = 0,
