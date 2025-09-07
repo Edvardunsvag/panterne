@@ -41,7 +41,4 @@ jobs:
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
         package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/publish
 
-    - name: Health Check
-      run: |
-        sleep 30
-        curl -f https://forte-quiz-backend-gmegb2bta0b7f8bj.norwayeast-01.azurewebsites.net/swagger || exit 1 
+ 

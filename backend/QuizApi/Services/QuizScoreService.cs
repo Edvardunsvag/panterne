@@ -107,7 +107,7 @@ public class QuizScoreService : IQuizScoreService
         // Update quiz session with final results
         var correctAnswers = attempts.Count(a => a.IsCorrect);
         var totalQuestions = attempts.Count;
-        var totalScore = correctAnswers * 10; // 10 points per correct answer
+        var totalScore = correctAnswers * 10; 
         var accuracyPercentage = totalQuestions > 0 ? (double)correctAnswers / totalQuestions * 100 : 0;
 
         quizSession.CompletedAt = DateTime.UtcNow;
