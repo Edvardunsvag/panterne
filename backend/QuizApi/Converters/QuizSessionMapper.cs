@@ -3,6 +3,12 @@ using QuizApi.Models;
 
 namespace QuizApi.Mappers;
 
+public interface IQuizSessionMapper
+{
+    QuizSessionDto ToDto(QuizSession quizSession);
+    List<QuizSessionDto> ToDtoList(List<QuizSession> quizSessions);
+} 
+
 public class QuizSessionMapper : IQuizSessionMapper
 {
     public QuizSessionDto ToDto(QuizSession quizSession)
@@ -27,8 +33,4 @@ public class QuizSessionMapper : IQuizSessionMapper
     }
 }
 
-public interface IQuizSessionMapper
-{
-    QuizSessionDto ToDto(QuizSession quizSession);
-    List<QuizSessionDto> ToDtoList(List<QuizSession> quizSessions);
-} 
+
