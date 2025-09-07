@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_WEBAPP_NAME: forte-quiz-backend-gmegb2bta0b7f8bj
+  AZURE_WEBAPP_NAME: forte-quiz-backend
   AZURE_WEBAPP_PACKAGE_PATH: './backend/QuizApi'
   DOTNET_VERSION: '8.0.x'
 
