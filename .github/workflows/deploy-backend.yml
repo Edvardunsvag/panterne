@@ -44,4 +44,4 @@ jobs:
     - name: Health Check
       run: |
         sleep 30
-        curl -f https://${{ env.AZURE_WEBAPP_NAME }}.norwayeast-01.azurewebsites.net/swagger || exit 1 
+        curl -f https://forte-quiz-backend-gmegb2bta0b7f8bj.norwayeast-01.azurewebsites.net/swagger || exit 1 

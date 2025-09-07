@@ -1,32 +1,49 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# Build results
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
 
-# dependencies
-/node_modules
+# Visual Studio
+.vs/
+*.user
+*.userosscache
 
-# next.js
-/.next/
-/out/
+# .NET Core
+project.lock.json
+project.fragment.lock.json
 
-# production
-/build
+# Build artifacts
+*.pdb
+*.cache
+*.log
 
-# debug
+# Publish profiles
+*.pubxml
+*.publishproj
+
+# Node.js (for your frontend)
+node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
 
-# env files
-.env*
+# Next.js
+.next/
+out/
 
-# vercel
-.vercel
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-# typescript
-*.tsbuildinfo
-next-env.d.ts
-
-# .NET backend
-backend/QuizApi/bin/
-backend/QuizApi/obj/
-backend/QuizApi/appsettings*.json
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
