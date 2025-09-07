@@ -56,10 +56,38 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddHangfireServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddHangfire(config =>
-            config.UseSqlServerStorage(configuration.GetConnectionString("DefaultConnection")));
+        var connectionString = configuration.GetConnectionString("DefaultConnection");
         
-        services.AddHangfireServer();
+        // Add validation
+        if (string.IsNullOrEmpty(connectionString))
+        {
+            throw new InvalidOperationException("DefaultConnection connection string is not configured");
+        }
+        
+        services.AddHangfire(config =>
+        {
+            config.UseSqlServerStorage(connectionString, new Hangfire.SqlServer.SqlServerStorageOptions
+            {
+                CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+                SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+                QueuePollInterval = TimeSpan.Zero,
+                UseRecommendedIsolationLevel = true,
+                DisableGlobalLocks = true,
+                SchemaName = "HangFire" // Explicit schema name
+            });
+            
+            // Add logging
+            config.UseDefaultTypeSerializer();
+            config.UseRecommendedSerializerSettings();
+        });
+        
+        // Configure Hangfire server with options
+        services.AddHangfireServer(options =>
+        {
+            options.WorkerCount = Environment.ProcessorCount * 5;
+            options.Queues = new[] { "default" };
+            options.ServerName = Environment.MachineName; // Helps with debugging
+        });
         
         return services;
     }
