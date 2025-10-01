@@ -38,6 +38,9 @@ out/
 .env.development.local
 .env.test.local
 
+# .NET appsettings with secrets (keep only Local for development)
+**/appsettings.Local.json
+
 # OS generated files
 .DS_Store
 .DS_Store?

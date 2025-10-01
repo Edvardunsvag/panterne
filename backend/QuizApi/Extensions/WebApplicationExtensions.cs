@@ -1,6 +1,7 @@
 using QuizApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Hangfire;
+using Hangfire.Dashboard;
 
 namespace QuizApi.Extensions;
 
@@ -24,13 +25,35 @@ public static class WebApplicationExtensions
     }
 
     public static WebApplication ConfigureHangfire(this WebApplication app)
+{
+    try
     {
-        // Always enable dashboard (not recommended for production)
-        app.UseHangfireDashboard();
-        app.ConfigureHangfireJobs();
+        Console.WriteLine("=== CONFIGURING HANGFIRE DASHBOARD ===");
+        app.UseHangfireDashboard("/hangfire", new DashboardOptions
+        {
+            Authorization = new[] { new AllowAllAuthorizationFilter() }
+        });
+        Console.WriteLine("=== HANGFIRE DASHBOARD CONFIGURED SUCCESSFULLY ===");
         
-        return app;
+        app.ConfigureHangfireJobs();
+        Console.WriteLine("=== HANGFIRE JOBS CONFIGURED SUCCESSFULLY ===");
     }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"=== ERROR CONFIGURING HANGFIRE: {ex.Message} ===");
+        Console.WriteLine($"=== STACK TRACE: {ex.StackTrace} ===");
+    }
+    
+    return app;
+}
+
+public class AllowAllAuthorizationFilter : IDashboardAuthorizationFilter
+{
+    public bool Authorize(DashboardContext context)
+    {
+        return true; // Allow all access
+    }
+}
 
     public static async Task<WebApplication> SetupDatabaseAsync(this WebApplication app)
     {

@@ -29,9 +29,13 @@ public class OpenAIService : IOpenAIService
 
     public OpenAIService(IConfiguration configuration, ILogger<OpenAIService> logger)
     {
-        var endpoint = configuration["AzureOpenAI__Endpoint"]!;
-        var apiKey = configuration["AzureOpenAI__ApiKey"]!;
-        _deploymentName = configuration["AzureOpenAI__DeploymentName"]!;
+        var endpoint = configuration["AzureOpenAI__Endpoint"] ?? Environment.GetEnvironmentVariable("AzureOpenAI__Endpoint");
+        var apiKey = configuration["AzureOpenAI__ApiKey"] ?? Environment.GetEnvironmentVariable("AzureOpenAI__ApiKey");
+        _deploymentName = (configuration["AzureOpenAI__DeploymentName"] ?? Environment.GetEnvironmentVariable("AzureOpenAI__DeploymentName"))!;
+
+        logger.LogInformation("AzureOpenAI__Endpoint: {Endpoint}", endpoint);
+        logger.LogInformation("AzureOpenAI__ApiKey: {ApiKey}", apiKey?.Substring(0, Math.Min(10, apiKey?.Length ?? 0)) + "...");
+        logger.LogInformation("AzureOpenAI__DeploymentName: {DeploymentName}", _deploymentName);
         
         _client = new OpenAIClient(new Uri(endpoint), new Azure.AzureKeyCredential(apiKey));
         _logger = logger;

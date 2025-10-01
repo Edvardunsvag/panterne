@@ -14,8 +14,7 @@ import {
 } from './generated/client';
 import './api-config'; // Import to configure the API client
 
-// Configure the base URL
-// OpenAPI.BASE = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000';
+
 
 export interface QuizSessionDto {
   id: string;
@@ -40,11 +39,7 @@ export interface ApiResponse<T> {
 }
 
 class ApiClient {
-  private baseUrl: string;
 
-  constructor() {
-    this.baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://localhost:7000';
-  }
 
   // Quiz methods
   async getRecentQuestionsByCategory(

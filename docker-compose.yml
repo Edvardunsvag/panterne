@@ -1,0 +1,18 @@
+services:
+  frontend:
+    extends:
+      file: frontend/docker-compose.fe.yml
+      service: frontend
+
+  backend:
+    extends:
+      file: backend/docker-compose.be.yml
+      service: backend
+
+  sqlserver:
+    extends:
+      file: backend/docker-compose.be.yml
+      service: sqlserver
+
+volumes:
+  sqlserver_data:

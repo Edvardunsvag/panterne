@@ -1,0 +1,138 @@
+name: Deploy to Azure Container Apps
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+  AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+  AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+  CONTAINER_REGISTRY: fortequizcontainerregistry.azurecr.io
+  RESOURCE_GROUP: forte-quiz-edvard
+  FRONTEND_CONTAINER_APP_NAME: quiz-frontend
+  BACKEND_CONTAINER_APP_NAME: quiz-backend
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        client-id: ${{ env.AZURE_CLIENT_ID }}
+        client-secret: ${{ env.AZURE_CLIENT_SECRET }}
+        subscription-id: ${{ env.AZURE_SUBSCRIPTION_ID }}
+        tenant-id: ${{ env.AZURE_TENANT_ID }}
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    
+    - name: Login to Azure Container Registry
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ env.CONTAINER_REGISTRY }}
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
+    
+    - name: Build and Push Frontend Image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./frontend
+        file: ./frontend/Dockerfile.prod
+        push: true
+        tags: |
+          ${{ env.CONTAINER_REGISTRY }}/quiz-frontend:${{ github.sha }}
+          ${{ env.CONTAINER_REGISTRY }}/quiz-frontend:latest
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+    
+    - name: Build and Push Backend Image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./backend
+        file: ./backend/Dockerfile
+        push: true
+        tags: |
+          ${{ env.CONTAINER_REGISTRY }}/quiz-backend:${{ github.sha }}
+          ${{ env.CONTAINER_REGISTRY }}/quiz-backend:latest
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+    
+    - name: Deploy Infrastructure
+      run: |
+        az deployment group create \
+          --resource-group "${{ env.RESOURCE_GROUP }}" \
+          --template-file "infrastructure/frontend.bicep" \
+          --parameters "infrastructure/parameters.json" \
+          --parameters frontendImage="${{ env.CONTAINER_REGISTRY }}/quiz-frontend:${{ github.sha }}" \
+          --parameters backendImage="${{ env.CONTAINER_REGISTRY }}/quiz-backend:${{ github.sha }}" \
+          --parameters azureOpenAIEndpoint="${{ secrets.AZURE_OPENAI_ENDPOINT }}" \
+          --parameters azureOpenAIApiKey="${{ secrets.AZURE_OPENAI_API_KEY }}" \
+          --parameters azureOpenAIDeploymentName="${{ secrets.AZURE_OPENAI_DEPLOYMENT_NAME }}" \
+          --parameters sqlConnectionString="${{ secrets.SQL_CONNECTION_STRING }}" \
+          --name "deployment-${{ github.run_number }}" \
+          --output table
+    
+    - name: Update Container Apps
+      run: |
+        az containerapp update \
+          --name "${{ env.FRONTEND_CONTAINER_APP_NAME }}" \
+          --resource-group "${{ env.RESOURCE_GROUP }}" \
+          --image "${{ env.CONTAINER_REGISTRY }}/quiz-frontend:${{ github.sha }}"
+        
+        az containerapp update \
+          --name "${{ env.BACKEND_CONTAINER_APP_NAME }}" \
+          --resource-group "${{ env.RESOURCE_GROUP }}" \
+          --image "${{ env.CONTAINER_REGISTRY }}/quiz-backend:${{ github.sha }}"
+    
+    - name: Get URLs
+      id: get-urls
+      run: |
+        FRONTEND_URL=$(az containerapp show \
+          --name "${{ env.FRONTEND_CONTAINER_APP_NAME }}" \
+          --resource-group "${{ env.RESOURCE_GROUP }}" \
+          --query "properties.configuration.ingress.fqdn" \
+          --output tsv)
+        echo "frontend-url=https://$FRONTEND_URL" >> $GITHUB_OUTPUT
+        
+        BACKEND_URL=$(az containerapp show \
+          --name "${{ env.BACKEND_CONTAINER_APP_NAME }}" \
+          --resource-group "${{ env.RESOURCE_GROUP }}" \
+          --query "properties.configuration.ingress.fqdn" \
+          --output tsv)
+        echo "backend-url=https://$BACKEND_URL" >> $GITHUB_OUTPUT
+    
+    - name: Comment on PR
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const frontendUrl = '${{ steps.get-urls.outputs.frontend-url }}';
+          const backendUrl = '${{ steps.get-urls.outputs.backend-url }}';
+          const comment = `## 🚀 Application Deployed Successfully!
+          
+          **Frontend URL:** ${frontendUrl}
+          **Backend URL:** ${backendUrl}
+          
+          **Deployment Details:**
+          - Frontend Image: \`${{ env.CONTAINER_REGISTRY }}/quiz-frontend:${{ github.sha }}\`
+          - Backend Image: \`${{ env.CONTAINER_REGISTRY }}/quiz-backend:${{ github.sha }}\`
+          - Environment: Production
+          - Resource Group: ${{ env.RESOURCE_GROUP }}
+          
+          **Next Steps:**
+          1. Test the deployed application
+          2. Verify all functionality works as expected`;
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: comment
+          });
