@@ -57,6 +57,7 @@ jobs:
         build-args: |
           SUPABASE_URL=${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}
+        platforms: linux/amd64
     
     - name: Build and Push Backend Image
       uses: docker/build-push-action@v5
