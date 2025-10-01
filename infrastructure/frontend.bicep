@@ -38,7 +38,7 @@ resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-
 // Role assignment for ACR access
 resource acrRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   name: guid(managedIdentity.id, 'AcrPull')
-  scope: resourceGroup('forte-quiz-edvard').id
+  scope: resourceGroup()
   properties: {
     roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '7f951dda-4ed3-4680-a7ca-43fe172d538d') // AcrPull role
     principalId: managedIdentity.properties.principalId
