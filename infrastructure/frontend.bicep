@@ -27,6 +27,24 @@ param sqlConnectionString string
 // Variables
 var containerAppName = 'quiz-frontend'
 var environmentName = 'quiz-environment'
+var managedIdentityName = 'quiz-managed-identity'
+
+// User-Assigned Managed Identity
+resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
+  name: managedIdentityName
+  location: location
+}
+
+// Role assignment for ACR access
+resource acrRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(managedIdentity.id, 'AcrPull')
+  scope: subscriptionResourceId('Microsoft.ContainerRegistry/registries', 'fortequizcontainerregistry')
+  properties: {
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '7f951dda-4ed3-4680-a7ca-43fe172d538d') // AcrPull role
+    principalId: managedIdentity.properties.principalId
+    principalType: 'ServicePrincipal'
+  }
+}
 
 // Log Analytics Workspace
 resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09-01' = {
@@ -61,6 +79,12 @@ resource frontendContainerApp 'Microsoft.App/containerApps@2023-05-01' = {
   location: location
   properties: {
     managedEnvironmentId: containerAppEnvironment.id
+    identity: {
+      type: 'UserAssigned'
+      userAssignedIdentities: {
+        '${managedIdentity.id}': {}
+      }
+    }
     configuration: {
       activeRevisionsMode: 'Single'
       ingress: {
@@ -111,6 +135,12 @@ resource backendContainerApp 'Microsoft.App/containerApps@2023-05-01' = {
   location: location
   properties: {
     managedEnvironmentId: containerAppEnvironment.id
+    identity: {
+      type: 'UserAssigned'
+      userAssignedIdentities: {
+        '${managedIdentity.id}': {}
+      }
+    }
     configuration: {
       activeRevisionsMode: 'Single'
       ingress: {
