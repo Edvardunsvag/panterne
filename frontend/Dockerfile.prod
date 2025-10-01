@@ -8,16 +8,17 @@ WORKDIR /app
 COPY package.json package-lock.json* ./
 RUN npm ci --only=production
 
-# Add this before the build step
+# Build the application
+FROM base AS builder
+WORKDIR /app
+
+# Add build arguments and environment variables in the builder stage
 ARG NEXT_PUBLIC_SUPABASE_URL
 ARG NEXT_PUBLIC_SUPABASE_ANON_KEY
 
 ENV NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL
 ENV NEXT_PUBLIC_SUPABASE_ANON_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-# Build the application
-FROM base AS builder
-WORKDIR /app
 COPY package.json package-lock.json* ./
 RUN npm ci
 COPY . .
