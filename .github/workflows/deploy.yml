@@ -53,6 +53,10 @@ jobs:
           ${{ env.CONTAINER_REGISTRY }}/quiz-frontend:${{ github.sha }}
           ${{ env.CONTAINER_REGISTRY }}/quiz-frontend:latest
         cache-from: type=gha
+        cache-to: type=gha,mode=max
+        build-args: |
+          SUPABASE_URL=${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}
     
     - name: Build and Push Backend Image
       uses: docker/build-push-action@v5
@@ -65,6 +69,7 @@ jobs:
           ${{ env.CONTAINER_REGISTRY }}/quiz-backend:latest
         cache-from: type=gha
         cache-to: type=gha,mode=max
+        platforms: linux/amd64
     
     - name: Deploy Infrastructure
       run: |
