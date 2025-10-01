@@ -1,7 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
 
 export async function GET(request: NextRequest) {
+  // Check if Supabase is configured
+  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_ANON_KEY) {
+    console.warn('Supabase not configured')
+    return NextResponse.redirect(new URL('/auth/auth-code-error', request.url))
+  }
+
+  // Dynamic import to avoid build-time execution
+  const { supabase } = await import('@/lib/supabase')
+  
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
   const next = searchParams.get('next') ?? '/'
@@ -13,6 +21,5 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  // Return the user to an error page with instructions
   return NextResponse.redirect(`${origin}/auth/auth-code-error`)
 } 
