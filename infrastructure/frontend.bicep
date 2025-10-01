@@ -10,6 +10,7 @@ param backendImage string = 'fortequizcontainerregistry.azurecr.io/quiz-backend:
 @description('API base URL for the frontend')
 param apiBaseUrl string = 'https://your-backend-url.azurecontainerapps.io'
 
+// Trigger build - testing managed identity deployment
 @description('Azure OpenAI endpoint')
 param azureOpenAIEndpoint string
 
