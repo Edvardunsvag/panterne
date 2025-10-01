@@ -92,12 +92,12 @@ jobs:
         az containerapp update \
           --name "${{ env.FRONTEND_CONTAINER_APP_NAME }}" \
           --resource-group "${{ env.RESOURCE_GROUP }}" \
-          --image "${{ env.CONTAINER_REGISTRY }}/quiz-frontend:${{ github.sha }}"
+          --image "${{ env.CONTAINER_REGISTRY }}/quiz-frontend:${{ github.run_number }}"
         
         az containerapp update \
           --name "${{ env.BACKEND_CONTAINER_APP_NAME }}" \
           --resource-group "${{ env.RESOURCE_GROUP }}" \
-          --image "${{ env.CONTAINER_REGISTRY }}/quiz-backend:${{ github.sha }}"
+          --image "${{ env.CONTAINER_REGISTRY }}/quiz-backend:${{ github.run_number }}"
     
     - name: Get URLs
       id: get-urls
