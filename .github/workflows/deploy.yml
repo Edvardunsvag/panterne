@@ -52,6 +52,7 @@ jobs:
         tags: |
           ${{ env.CONTAINER_REGISTRY }}/quiz-frontend:${{ github.sha }}
           ${{ env.CONTAINER_REGISTRY }}/quiz-frontend:latest
+          ${{ env.CONTAINER_REGISTRY }}/quiz-frontend:${{ github.run_number }}
         cache-from: type=gha
         build-args: |
           SUPABASE_URL=${{ secrets.SUPABASE_URL }}
@@ -67,6 +68,7 @@ jobs:
         tags: |
           ${{ env.CONTAINER_REGISTRY }}/quiz-backend:${{ github.sha }}
           ${{ env.CONTAINER_REGISTRY }}/quiz-backend:latest
+          ${{ env.CONTAINER_REGISTRY }}/quiz-backend:${{ github.run_number }}
         cache-from: type=gha
         platforms: linux/amd64
     
@@ -76,8 +78,8 @@ jobs:
           --resource-group "${{ env.RESOURCE_GROUP }}" \
           --template-file "infrastructure/frontend.bicep" \
           --parameters "infrastructure/parameters.json" \
-          --parameters frontendImage="${{ env.CONTAINER_REGISTRY }}/quiz-frontend:${{ github.sha }}" \
-          --parameters backendImage="${{ env.CONTAINER_REGISTRY }}/quiz-backend:${{ github.sha }}" \
+          --parameters frontendImage="${{ env.CONTAINER_REGISTRY }}/quiz-frontend:${{ github.run_number }}" \
+          --parameters backendImage="${{ env.CONTAINER_REGISTRY }}/quiz-backend:${{ github.run_number }}" \
           --parameters azureOpenAIEndpoint="${{ secrets.AZURE_OPENAI_ENDPOINT }}" \
           --parameters azureOpenAIApiKey="${{ secrets.AZURE_OPENAI_API_KEY }}" \
           --parameters azureOpenAIDeploymentName="${{ secrets.AZURE_OPENAI_DEPLOYMENT_NAME }}" \
