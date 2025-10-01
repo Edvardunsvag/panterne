@@ -34,6 +34,7 @@ jobs:
         driver: docker-container
         driver-opts: |
           image=moby/buildkit:latest
+        use: true
     
     - name: Login to Azure Container Registry
       uses: azure/docker-login@v1
@@ -52,7 +53,6 @@ jobs:
           ${{ env.CONTAINER_REGISTRY }}/quiz-frontend:${{ github.sha }}
           ${{ env.CONTAINER_REGISTRY }}/quiz-frontend:latest
         cache-from: type=gha
-        cache-to: type=gha,mode=max
     
     - name: Build and Push Backend Image
       uses: docker/build-push-action@v5
