@@ -21,6 +21,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
     
+    - name: Install Azure CLI
+      uses: azure/setup-az@v1
+      with:
+        az-version: 2.72.0
+    
     - name: Azure Login
       uses: azure/login@v1
       with:
@@ -73,17 +78,17 @@ jobs:
     - name: Deploy Infrastructure
       run: |
         az deployment group create \
-          --resource-group "${{ env.RESOURCE_GROUP }}" \
+          --resource-group "forte-quiz-edvard" \
           --template-file "infrastructure/frontend.bicep" \
           --parameters "infrastructure/parameters.json" \
-          --parameters frontendImage="${{ env.CONTAINER_REGISTRY }}/quiz-frontend:${{ github.run_number }}" \
-          --parameters backendImage="${{ env.CONTAINER_REGISTRY }}/quiz-backend:${{ github.run_number }}" \
-          --parameters azureOpenAIEndpoint="${{ secrets.AZURE_OPENAI_ENDPOINT }}" \
-          --parameters azureOpenAIApiKey="${{ secrets.AZURE_OPENAI_API_KEY }}" \
-          --parameters azureOpenAIDeploymentName="${{ secrets.AZURE_OPENAI_DEPLOYMENT_NAME }}" \
-          --parameters sqlConnectionString="${{ secrets.SQL_CONNECTION_STRING }}" \
-          --name "deployment-${{ github.run_number }}-${{ github.sha }}" \
-          --output table
+          --parameters frontendImage="fortequizcontainerregistry.azurecr.io/quiz-frontend:24" \
+          --parameters backendImage="fortequizcontainerregistry.azurecr.io/quiz-backend:24" \
+          --parameters azureOpenAIEndpoint="***" \
+          --parameters azureOpenAIApiKey="***" \
+          --parameters azureOpenAIDeploymentName="***" \
+          --parameters sqlConnectionString="" \
+          --name "deployment-24-2a9dd509d0d842c51f7f578e03307c98c7787359" \
+          --debug
     
     - name: Get URLs
       id: get-urls
