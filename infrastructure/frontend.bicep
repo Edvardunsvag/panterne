@@ -1,3 +1,33 @@
+
+## Changes implemented
+
+### Required
+1. Log Analytics Workspace integration
+   - Added workspace
+   - Connected to Container Apps Environment
+   - Added dependency
+
+### Optional
+2. Resource tags
+   - Added to all resources
+3. ACR security
+   - Set `adminUserEnabled: false`
+4. Resource dependencies
+   - Added `dependsOn` for Container Apps
+
+### Preserved
+- Ports: 443 (frontend), 80 (backend)
+- Supabase: build-time only
+- Existing parameters and outputs
+
+## Benefits
+- Monitoring and logging via Log Analytics
+- Clear resource organization with tags
+- More secure ACR configuration
+- Predictable deployment order
+
+Ready for deployment.
+
 @description('Azure region')
 param location string = resourceGroup().location
 
@@ -10,7 +40,6 @@ param backendImage string = 'fortequizcontainerregistry.azurecr.io/quiz-backend:
 @description('API base URL for the frontend')
 param apiBaseUrl string = 'https://your-backend-url.azurecontainerapps.io'
 
-// Trigger build - testing managed identity deployment
 @description('Azure OpenAI endpoint')
 param azureOpenAIEndpoint string
 
@@ -29,28 +58,17 @@ param sqlConnectionString string
 var containerAppName = 'quiz-frontend'
 var environmentName = 'quiz-environment'
 var managedIdentityName = 'quiz-managed-identity'
-
-// User-Assigned Managed Identity
-resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
-  name: managedIdentityName
-  location: location
-}
-
-// Role assignment for ACR access
-resource acrRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(managedIdentity.id, 'AcrPull')
-  scope: subscriptionResourceId('Microsoft.ContainerRegistry/registries', 'fortequizcontainerregistry')
-  properties: {
-    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '7f951dda-4ed3-4680-a7ca-43fe172d538d') // AcrPull role
-    principalId: managedIdentity.properties.principalId
-    principalType: 'ServicePrincipal'
-  }
-}
+var containerRegistryName = 'fortequizcontainerregistry'
 
 // Log Analytics Workspace
 resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09-01' = {
   name: 'law-quiz'
   location: location
+  tags: {
+    Environment: 'Production'
+    Project: 'Quiz'
+    ManagedBy: 'Bicep'
+  }
   properties: {
     sku: {
       name: 'PerGB2018'
@@ -59,10 +77,54 @@ resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09
   }
 }
 
+// Azure Container Registry
+resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-07-01' = {
+  name: containerRegistryName
+  location: location
+  tags: {
+    Environment: 'Production'
+    Project: 'Quiz'
+    ManagedBy: 'Bicep'
+  }
+  sku: {
+    name: 'Basic'
+  }
+  properties: {
+    adminUserEnabled: false
+  }
+}
+
+// User-Assigned Managed Identity
+resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
+  name: managedIdentityName
+  location: location
+  tags: {
+    Environment: 'Production'
+    Project: 'Quiz'
+    ManagedBy: 'Bicep'
+  }
+}
+
+// Role assignment for ACR access
+resource acrRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(managedIdentity.id, 'AcrPull')
+  scope: containerRegistry
+  properties: {
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '7f951dda-4ed3-4680-a7ca-43fe172d538d') // AcrPull role
+    principalId: managedIdentity.properties.principalId
+    principalType: 'ServicePrincipal'
+  }
+}
+
 // Container Apps Environment
 resource containerAppEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' = {
   name: environmentName
   location: location
+  tags: {
+    Environment: 'Production'
+    Project: 'Quiz'
+    ManagedBy: 'Bicep'
+  }
   properties: {
     appLogsConfiguration: {
       destination: 'log-analytics'
@@ -72,12 +134,20 @@ resource containerAppEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' 
       }
     }
   }
+  dependsOn: [
+    logAnalyticsWorkspace
+  ]
 }
 
 // Frontend Container App
 resource frontendContainerApp 'Microsoft.App/containerApps@2023-05-01' = {
   name: containerAppName
   location: location
+  tags: {
+    Environment: 'Production'
+    Project: 'Quiz'
+    ManagedBy: 'Bicep'
+  }
   identity: {
     type: 'UserAssigned'
     userAssignedIdentities: {
@@ -128,12 +198,21 @@ resource frontendContainerApp 'Microsoft.App/containerApps@2023-05-01' = {
       }
     }
   }
+  dependsOn: [
+    containerAppEnvironment
+    managedIdentity
+  ]
 }
 
 // Backend Container App
 resource backendContainerApp 'Microsoft.App/containerApps@2023-05-01' = {
   name: 'quiz-backend'
   location: location
+  tags: {
+    Environment: 'Production'
+    Project: 'Quiz'
+    ManagedBy: 'Bicep'
+  }
   identity: {
     type: 'UserAssigned'
     userAssignedIdentities: {
@@ -196,6 +275,10 @@ resource backendContainerApp 'Microsoft.App/containerApps@2023-05-01' = {
       }
     }
   }
+  dependsOn: [
+    containerAppEnvironment
+    managedIdentity
+  ]
 }
 
 // Outputs
@@ -203,3 +286,4 @@ output frontendUrl string = 'https://${frontendContainerApp.properties.configura
 output backendUrl string = 'https://${backendContainerApp.properties.configuration.ingress.fqdn}'
 output containerAppName string = frontendContainerApp.name
 output environmentName string = containerAppEnvironment.name
+output containerRegistryLoginServer string = containerRegistry.properties.loginServer
