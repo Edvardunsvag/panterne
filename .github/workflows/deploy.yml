@@ -23,13 +23,23 @@ jobs:
     
     - name: Install Azure CLI 2.72.0
       run: |
-        # Remove current version
+        # Remove current version and clean up
         sudo apt-get remove -y azure-cli
-        # Install specific version
+        sudo rm -f /etc/apt/sources.list.d/azure-cli.list
+        sudo rm -f /etc/apt/sources.list.d/azure-cli.sources
+        
+        # Add Microsoft repository
         curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/microsoft.gpg > /dev/null
         echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/azure-cli.list
+        
+        # Update package list
         sudo apt-get update
-        sudo apt-get install azure-cli=2.72.0-1~bullseye
+        
+        # Install specific version (try different version formats)
+        sudo apt-get install azure-cli=2.72.0-1~focal || \
+        sudo apt-get install azure-cli=2.72.0-1~jammy || \
+        sudo apt-get install azure-cli=2.72.0-1~bullseye || \
+        sudo apt-get install azure-cli=2.72.0
     
     - name: Azure Login
       uses: azure/login@v1
