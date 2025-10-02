@@ -1,33 +1,3 @@
-
-## Changes implemented
-
-### Required
-1. Log Analytics Workspace integration
-   - Added workspace
-   - Connected to Container Apps Environment
-   - Added dependency
-
-### Optional
-2. Resource tags
-   - Added to all resources
-3. ACR security
-   - Set `adminUserEnabled: false`
-4. Resource dependencies
-   - Added `dependsOn` for Container Apps
-
-### Preserved
-- Ports: 443 (frontend), 80 (backend)
-- Supabase: build-time only
-- Existing parameters and outputs
-
-## Benefits
-- Monitoring and logging via Log Analytics
-- Clear resource organization with tags
-- More secure ACR configuration
-- Predictable deployment order
-
-Ready for deployment.
-
 @description('Azure region')
 param location string = resourceGroup().location
 
