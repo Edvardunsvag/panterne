@@ -4,9 +4,6 @@
   "parameters": {
     "frontendImage": {
       "value": "fortequizcontainerregistry.azurecr.io/quiz-frontend:latest"
-    },
-    "apiBaseUrl": {
-      "value": "https://your-backend-url.azurecontainerapps.io"
     }
   }
 }

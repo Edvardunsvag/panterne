@@ -7,9 +7,6 @@ param frontendImage string = 'fortequizcontainerregistry.azurecr.io/quiz-fronten
 @description('Container image for the backend')
 param backendImage string = 'fortequizcontainerregistry.azurecr.io/quiz-backend:latest'
 
-@description('API base URL for the frontend')
-param apiBaseUrl string = 'https://your-backend-url.azurecontainerapps.io'
-
 @description('Azure OpenAI endpoint')
 param azureOpenAIEndpoint string
 
@@ -24,13 +21,11 @@ param azureOpenAIDeploymentName string = 'gpt-4o-mini'
 @secure()
 param sqlConnectionString string
 
-// Variables
 var containerAppName = 'quiz-frontend'
 var environmentName = 'quiz-environment'
 var managedIdentityName = 'quiz-managed-identity'
 var containerRegistryName = 'fortequizcontainerregistry'
 
-// Log Analytics Workspace
 resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09-01' = {
   name: 'law-quiz'
   location: location
@@ -47,7 +42,6 @@ resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09
   }
 }
 
-// Azure Container Registry
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-07-01' = {
   name: containerRegistryName
   location: location
@@ -64,7 +58,6 @@ resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-07-01' =
   }
 }
 
-// User-Assigned Managed Identity
 resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
   name: managedIdentityName
   location: location
@@ -75,18 +68,16 @@ resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-
   }
 }
 
-// Role assignment for ACR access
 resource acrRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   name: guid(managedIdentity.id, 'AcrPull')
   scope: containerRegistry
   properties: {
-    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '7f951dda-4ed3-4680-a7ca-43fe172d538d') // AcrPull role
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '7f951dda-4ed3-4680-a7ca-43fe172d538d')
     principalId: managedIdentity.properties.principalId
     principalType: 'ServicePrincipal'
   }
 }
 
-// Container Apps Environment
 resource containerAppEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' = {
   name: environmentName
   location: location
@@ -104,77 +95,8 @@ resource containerAppEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' 
       }
     }
   }
-  dependsOn: [
-    logAnalyticsWorkspace
-  ]
 }
 
-// Frontend Container App
-resource frontendContainerApp 'Microsoft.App/containerApps@2023-05-01' = {
-  name: containerAppName
-  location: location
-  tags: {
-    Environment: 'Production'
-    Project: 'Quiz'
-    ManagedBy: 'Bicep'
-  }
-  identity: {
-    type: 'UserAssigned'
-    userAssignedIdentities: {
-      '${managedIdentity.id}': {}
-    }
-  }
-  properties: {
-    managedEnvironmentId: containerAppEnvironment.id
-    configuration: {
-      activeRevisionsMode: 'Single'
-      ingress: {
-        external: true
-        targetPort: 443
-        transport: 'http'
-        allowInsecure: false
-        traffic: [
-          {
-            weight: 100
-            latestRevision: true
-          }
-        ]
-      }
-    }
-    template: {
-      containers: [
-        {
-          name: 'quiz-frontend'
-          image: frontendImage
-          resources: {
-            cpu: json('0.5')
-            memory: '1Gi'
-          }
-          env: [
-            {
-              name: 'NODE_ENV'
-              value: 'production'
-            }
-            {
-              name: 'NEXT_PUBLIC_API_BASE_URL'
-              value: apiBaseUrl
-            }
-          ]
-        }
-      ]
-      scale: {
-        minReplicas: 1
-        maxReplicas: 3
-      }
-    }
-  }
-  dependsOn: [
-    containerAppEnvironment
-    managedIdentity
-  ]
-}
-
-// Backend Container App
 resource backendContainerApp 'Microsoft.App/containerApps@2023-05-01' = {
   name: 'quiz-backend'
   location: location
@@ -245,13 +167,71 @@ resource backendContainerApp 'Microsoft.App/containerApps@2023-05-01' = {
       }
     }
   }
+}
+
+resource frontendContainerApp 'Microsoft.App/containerApps@2023-05-01' = {
+  name: containerAppName
+  location: location
+  tags: {
+    Environment: 'Production'
+    Project: 'Quiz'
+    ManagedBy: 'Bicep'
+  }
+  identity: {
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${managedIdentity.id}': {}
+    }
+  }
+  properties: {
+    managedEnvironmentId: containerAppEnvironment.id
+    configuration: {
+      activeRevisionsMode: 'Single'
+      ingress: {
+        external: true
+        targetPort: 443
+        transport: 'http'
+        allowInsecure: false
+        traffic: [
+          {
+            weight: 100
+            latestRevision: true
+          }
+        ]
+      }
+    }
+    template: {
+      containers: [
+        {
+          name: 'quiz-frontend'
+          image: frontendImage
+          resources: {
+            cpu: json('0.5')
+            memory: '1Gi'
+          }
+          env: [
+            {
+              name: 'NODE_ENV'
+              value: 'production'
+            }
+            {
+              name: 'NEXT_PUBLIC_API_BASE_URL'
+              value: 'https://${backendContainerApp.properties.configuration.ingress.fqdn}'
+            }
+          ]
+        }
+      ]
+      scale: {
+        minReplicas: 1
+        maxReplicas: 3
+      }
+    }
+  }
   dependsOn: [
-    containerAppEnvironment
-    managedIdentity
+    backendContainerApp
   ]
 }
 
-// Outputs
 output frontendUrl string = 'https://${frontendContainerApp.properties.configuration.ingress.fqdn}'
 output backendUrl string = 'https://${backendContainerApp.properties.configuration.ingress.fqdn}'
 output containerAppName string = frontendContainerApp.name
