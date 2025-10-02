@@ -25,6 +25,7 @@ jobs:
       uses: azure/login@v1
       with:
         client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
     
@@ -83,20 +84,8 @@ jobs:
           --parameters azureOpenAIApiKey="${{ secrets.AZURE_OPENAI_API_KEY }}" \
           --parameters azureOpenAIDeploymentName="${{ secrets.AZURE_OPENAI_DEPLOYMENT_NAME }}" \
           --parameters sqlConnectionString="${{ secrets.SQL_CONNECTION_STRING }}" \
-          --name "deployment-${{ github.run_number }}" \
+          --name "deployment-${{ github.run_number }}-${{ github.sha }}" \
           --output table
-    
-    - name: Update Container Apps
-      run: |
-        az containerapp update \
-          --name "${{ env.FRONTEND_CONTAINER_APP_NAME }}" \
-          --resource-group "${{ env.RESOURCE_GROUP }}" \
-          --image "${{ env.CONTAINER_REGISTRY }}/quiz-frontend:${{ github.run_number }}"
-        
-        az containerapp update \
-          --name "${{ env.BACKEND_CONTAINER_APP_NAME }}" \
-          --resource-group "${{ env.RESOURCE_GROUP }}" \
-          --image "${{ env.CONTAINER_REGISTRY }}/quiz-backend:${{ github.run_number }}"
     
     - name: Get URLs
       id: get-urls
