@@ -38,10 +38,8 @@ jobs:
         use: true
     
     - name: Login to Azure Container Registry
-      uses: azure/docker-login@v1
-      with:
-        login-server: ${{ env.CONTAINER_REGISTRY }}
-        use-azure-cli: true
+      run: |
+        az acr login --name fortequizcontainerregistry
     
     - name: Build and Push Frontend Image
       uses: docker/build-push-action@v5
