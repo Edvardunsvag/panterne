@@ -67,13 +67,31 @@ jobs:
           ${{ env.CONTAINER_REGISTRY }}/quiz-backend:${{ github.run_number }}
         platforms: linux/amd64
     
-    - name: Deploy Infrastructure (Simplified)
+    - name: Test Parameter Validation
+      run: |
+        echo "Checking files..."
+        ls -la infrastructure/
+        echo "Current directory:"
+        pwd
+        echo "Container registry:"
+        docker images | head -5
+
+    - name: Deploy Infrastructure (Fixed Parameters)
       env:
         RESOURCE_GROUP: forte-quiz-edvard
         RUN_NUMBER: ${{ github.run_number }}
         SQL_CONNECTION_STRING: ${{ secrets.SQL_CONNECTION_STRING }}
         AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
       run: |
+        # Validate template first
+        echo "Validating Bicep template..."
+        az deployment group validate \
+          --resource-group "${RESOURCE_GROUP}" \
+          --template-file "infrastructure/frontend.bicep" \
+          --parameters "infrastructure/parameters.json"
+        
+        echo "Template validation successful. Proceeding with deployment..."
+        
         az deployment group create \
           --resource-group "${RESOURCE_GROUP}" \
           --template-file "infrastructure/frontend.bicep" \
