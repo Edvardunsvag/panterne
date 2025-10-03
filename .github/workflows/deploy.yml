@@ -151,20 +151,7 @@ jobs:
           --output json | jq '.' || echo "Validation failed or returned non-JSON output"
         echo ""
         
-        # Step 8: What-If Test
-        echo "🔍 What-If Test:"
-        echo "Running az deployment group what-if..."
-        az deployment group what-if \
-          --resource-group "${RESOURCE_GROUP}" \
-          --template-file "infrastructure/frontend.bicep" \
-          --parameters "infrastructure/parameters.json" \
-          --parameters frontendImage="fortequizcontainerregistry.azurecr.io/quiz-frontend:${RUN_NUMBER}" \
-          --parameters backendImage="fortequizcontainerregistry.azurecr.io/quiz-backend:${RUN_NUMBER}" \
-          --parameters sqlConnectionString="${SQL_CONNECTION_STRING}" \
-          --parameters azureOpenAIApiKey="${AZURE_OPENAI_API_KEY}" \
-          --name "deployment-what-if-${RUN_NUMBER}" \
-          --output table
-        echo ""
+      
         
         # Step 9: Deployment Command Dry Run
         echo "🔍 Deployment Command Debug:"
