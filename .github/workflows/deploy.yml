@@ -70,18 +70,28 @@ jobs:
         platforms: linux/amd64
     
     - name: Deploy Infrastructure
+      env:
+        # Reference the global environment variables
+        CONTAINER_REGISTRY: ${{ env.CONTAINER_REGISTRY }}
+        RESOURCE_GROUP: ${{ env.RESOURCE_GROUP }}
+        RUN_NUMBER: ${{ github.run_number }}
+        AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
+        AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
+        AZURE_OPENAI_DEPLOYMENT_NAME: ${{ secrets.AZURE_OPENAI_DEPLOYMENT_NAME }}
+        SQL_CONNECTION_STRING: ${{ secrets.SQL_CONNECTION_STRING }}
       run: |
+        # Use the environment variables
         az deployment group create \
-          --resource-group "${{ env.RESOURCE_GROUP }}" \
+          --resource-group "${RESOURCE_GROUP}" \
           --template-file "infrastructure/frontend.bicep" \
           --parameters "infrastructure/parameters.json" \
-          --parameters frontendImage="${{ env.CONTAINER_REGISTRY }}/quiz-frontend:${{ github.run_number }}" \
-          --parameters backendImage="${{ env.CONTAINER_REGISTRY }}/quiz-backend:${{ github.run_number }}" \
-          --parameters azureOpenAIEndpoint="${{ secrets.AZURE_OPENAI_ENDPOINT }}" \
-          --parameters azureOpenAIApiKey="${{ secrets.AZURE_OPENAI_API_KEY }}" \
-          --parameters azureOpenAIDeploymentName="${{ secrets.AZURE_OPENAI_DEPLOYMENT_NAME }}" \
-          --parameters sqlConnectionString="${{ secrets.SQL_CONNECTION_STRING }}" \
-          --name "deployment-${{ github.run_number }}" \
+          --parameters frontendImage="${CONTAINER_REGISTRY}/quiz-frontend:${RUN_NUMBER}" \
+          --parameters backendImage="${CONTAINER_REGISTRY}/quiz-backend:${RUN_NUMBER}" \
+          --parameters azureOpenAIEndpoint="${AZURE_OPENAI_ENDPOINT}" \
+          --parameters azureOpenAIApiKey="${AZURE_OPENAI_API_KEY}" \
+          --parameters azureOpenAIDeploymentName="${AZURE_OPENAI_DEPLOYMENT_NAME}" \
+          --parameters sqlConnectionString="${SQL_CONNECTION_STRING}" \
+          --name "deployment-${RUN_NUMBER}" \
           --output table
     
     - name: Update Container Apps
