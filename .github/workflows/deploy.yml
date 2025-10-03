@@ -76,22 +76,113 @@ jobs:
         echo "Container registry:"
         docker images | head -5
 
-    - name: Deploy Infrastructure (Fixed Parameters)
+    - name: Deploy Infrastructure (Debug Mode)
       env:
         RESOURCE_GROUP: forte-quiz-edvard
         RUN_NUMBER: ${{ github.run_number }}
         SQL_CONNECTION_STRING: ${{ secrets.SQL_CONNECTION_STRING }}
         AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
       run: |
-        # Validate template first
-        echo "Validating Bicep template..."
+        echo "=== DEBUGGING FULL DEPLOYMENT PROCESS ==="
+        
+        # Step 1: Environment Check
+        echo "🔍 Environment Debug:"
+        echo "RESOURCE_GROUP: ${RESOURCE_GROUP}"
+        echo "RUN_NUMBER: ${RUN_NUMBER}"
+        echo "AZURE_SUBSCRIPTION_ID: $(az account show --query id --output tsv)"
+        echo "AZURE_TENANT_ID: $(az account show --query tenantId --output tsv)"
+        echo "CURRENT_USER: $(az account show --query user.name --output tsv)"
+        echo ""
+        
+        # Step 2: Azure CLI Version & Status
+        echo "🔍 Azure CLI Debug:"
+        echo "Azure CLI Version: $(az --version | head -1)"
+        echo "Login Status:"
+        az account show --output table
+        echo ""
+        
+        # Step 3: File System Debug
+        echo "🔍 File System Debug:"
+        echo "Current directory: $(pwd)"
+        echo "Contents:"
+        ls -la
+        echo "Infrastructure directory:"
+        ls -la infrastructure/
+        echo "Checking specific files:"
+        echo "Bicep file exists: $(test -f infrastructure/frontend.bicep && echo 'YES' || echo 'NO')"
+        echo "Parameters file exists: $(test -f infrastructure/parameters.json && echo 'YES' || echo 'NO')"
+        echo ""
+        
+        # Step 4: Parameter File Debug
+        echo "🔍 Parameters Debug:"
+        echo "parameters.json content:"
+        cat infrastructure/parameters.json
+        echo ""
+        echo "Environment variables:"
+        echo "SQL_CONNECTION_STRING length: ${#SQL_CONNECTION_STRING}"
+        echo "AZURE_OPENAI_API_KEY length: ${#AZURE_OPENAI_API_KEY}"
+        echo "SQL_CONNECTION_STRING first 20 chars: ${SQL_CONNECTION_STRING:0:20}..."
+        echo "AZURE_OPENAI_API_KEY first 20 chars: ${AZURE_OPENAI_API_KEY:0:20}..."
+        echo ""
+        
+        # Step 5: Resource Group Debug  
+        echo "🔍 Resource Group Debug:"
+        echo "Resource group exists: $(az group exists --name ${RESOURCE_GROUP})"
+        echo "Resource group location: $(az group show --name ${RESOURCE_GROUP} --query location --output tsv)"
+        echo "Current resources in group:"
+        az resource list --resource-group ${RESOURCE_GROUP} --query "[].{Name:name, Type:type}" --output table
+        echo ""
+        
+        # Step 6: Bicep Compilation Test
+        echo "🔍 Bicep Compilation Test:"
+        echo "Compiling Bicep template..."
+        az bicep build --file infrastructure/frontend.bicep --stdout > /dev/null
+        echo "Bicep compilation: $([ $? -eq 0 ] && echo 'SUCCESS' || echo 'FAILED')"
+        echo ""
+        
+        # Step 7: Template Validation
+        echo "🔍 Template Validation:"
+        echo "Running az deployment group validate..."
         az deployment group validate \
           --resource-group "${RESOURCE_GROUP}" \
           --template-file "infrastructure/frontend.bicep" \
-          --parameters "infrastructure/parameters.json"
+          --parameters "infrastructure/parameters.json" \
+          --verbosity detailed \
+          --output json | jq '.' || echo "Validation failed or returned non-JSON output"
+        echo ""
         
-        echo "Template validation successful. Proceeding with deployment..."
+        # Step 8: What-If Test
+        echo "🔍 What-If Test:"
+        echo "Running az deployment group what-if..."
+        az deployment group what-if \
+          --resource-group "${RESOURCE_GROUP}" \
+          --template-file "infrastructure/frontend.bicep" \
+          --parameters "infrastructure/parameters.json" \
+          --parameters frontendImage="fortequizcontainerregistry.azurecr.io/quiz-frontend:${RUN_NUMBER}" \
+          --parameters backendImage="fortequizcontainerregistry.azurecr.io/quiz-backend:${RUN_NUMBER}" \
+          --parameters sqlConnectionString="${SQL_CONNECTION_STRING}" \
+          --parameters azureOpenAIApiKey="${AZURE_OPENAI_API_KEY}" \
+          --name "deployment-what-if-${RUN_NUMBER}" \
+          --output table
+        echo ""
         
+        # Step 9: Deployment Command Dry Run
+        echo "🔍 Deployment Command Debug:"
+        echo "Command that would be executed:"
+        echo "az deployment group create \\"
+        echo "  --resource-group \"${RESOURCE_GROUP}\" \\"
+        echo "  --template-file \"infrastructure/frontend.bicep\" \\"
+        echo "  --parameters \"infrastructure/parameters.json\" \\"
+        echo "  --parameters frontendImage=\"fortequizcontainerregistry.azurecr.io/quiz-frontend:${RUN_NUMBER}\" \\"
+        echo "  --parameters backendImage=\"fortequizcontainerregistry.azurecr.io/quiz-backend:${RUN_NUMBER}\" \\"
+        echo "  --parameters sqlConnectionString=\"${SQL_CONNECTION_STRING:0:20}...\" \\"
+        echo "  --parameters azureOpenAIApiKey=\"${AZURE_OPENAI_API_KEY:0:20}...\" \\"
+        echo "  --name \"deployment-${RUN_NUMBER}" \\"
+        echo "  --output table"
+        echo ""
+        
+        # Step 10: Actual Deployment (if validation passed)
+        echo "🚀 Attempting actual deployment..."
         az deployment group create \
           --resource-group "${RESOURCE_GROUP}" \
           --template-file "infrastructure/frontend.bicep" \
@@ -101,7 +192,8 @@ jobs:
           --parameters sqlConnectionString="${SQL_CONNECTION_STRING}" \
           --parameters azureOpenAIApiKey="${AZURE_OPENAI_API_KEY}" \
           --name "deployment-${RUN_NUMBER}" \
-          --output table
+          --output table \
+          --verbose
     
     - name: Update Container Apps
       run: |
