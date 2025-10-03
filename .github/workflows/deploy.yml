@@ -69,30 +69,41 @@ jobs:
         cache-from: type=gha
         platforms: linux/amd64
     
-    - name: Deploy Infrastructure
+    - name: Deploy Infrastructure (Progressive)
       env:
-        # Reference the global environment variables
-        CONTAINER_REGISTRY: ${{ env.CONTAINER_REGISTRY }}
-        RESOURCE_GROUP: ${{ env.RESOURCE_GROUP }}
+        RESOURCE_GROUP: forte-quiz-edvard
         RUN_NUMBER: ${{ github.run_number }}
+        SQL_CONNECTION_STRING: ${{ secrets.SQL_CONNECTION_STRING }}
         AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
         AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
-        AZURE_OPENAI_DEPLOYMENT_NAME: ${{ secrets.AZURE_OPENAI_DEPLOYMENT_NAME }}
-        SQL_CONNECTION_STRING: ${{ secrets.SQL_CONNECTION_STRING }}
+        AZURE_OPENAI_DEPLOYMENT_NAME: ${{ secrets.AZURE_OPENAI_DEPT_LOYMENT_NAME }}
       run: |
-        # Use the environment variables
-        az deployment group create \
-          --resource-group "${RESOURCE_GROUP}" \
-          --template-file "infrastructure/frontend.bicep" \
-          --parameters "infrastructure/parameters.json" \
-          --parameters frontendImage="${CONTAINER_REGISTRY}/quiz-frontend:${RUN_NUMBER}" \
-          --parameters backendImage="${CONTAINER_REGISTRY}/quiz-backend:${RUN_NUMBER}" \
-          --parameters azureOpenAIEndpoint="${AZURE_OPENAI_ENDPOINT}" \
-          --parameters azureOpenAIApiKey="${AZURE_OPENAI_API_KEY}" \
-          --parameters azureOpenAIDeploymentName="${AZURE_OPENAI_DEPLOYMENT_NAME}" \
-          --parameters sqlConnectionString="${SQL_CONNECTION_STRING}" \
-          --name "deployment-${RUN_NUMBER}" \
-          --output table
+        # Build the command step by step
+        CMD="az deployment group create \
+          --resource-group \"${RESOURCE_GROUP}\" \
+          --template-file \"infrastructure/frontend.bicep\" \
+          --parameters \"infrastructure/parameters.json\" \
+          --parameters frontendImage=\"fortequizcontainerregistry.azurecr.io/quiz-frontend:${RUN_NUMBER}\" \
+          --parameters backendImage=\"fortequizcontainerregistry.azurecr.io/quiz-backend:${RUN_NUMBER}\" \
+          --parameters sqlConnectionString=\"${SQL_CONNECTION_STRING}\" \
+          --name \"deployment-${RUN_NUMBER}\" \
+          --output table"
+        
+        # Add OpenAI parameters if they exist and are not empty
+        if [ ! -z "${AZURE_OPENAI_ENDPOINT}" ]; then
+          CMD="$CMD --parameters azureOpenAIEndpoint=\"${AZURE_OPENAI_ENDPOINT}\""
+        fi
+        
+        if [ ! -z "${AZURE_OPENAI_API_KEY}" ]; then
+          CMD="$CMD --parameters azureOpenAIApiKey=\"${AZURE_OPENAI_API_KEY}\""
+        fi
+        
+        if [ ! -z "${AZURE_OPENAI_DEPLOYMENT_NAME}" ]; then
+          CMD="$CMD --parameters azureOpenAIDeploymentName=\"${AZURE_OPENAI_DEPT_LOYMENT_NAME}\""
+        fi
+        
+        echo "Running deployment command..."
+        eval "$CMD"
     
     - name: Update Container Apps
       run: |
