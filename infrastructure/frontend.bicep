@@ -47,18 +47,6 @@ resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09
 
 resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-07-01' existing = {
   name: containerRegistryName
-  location: location
-  tags: {
-    Environment: 'Production'
-    Project: 'Quiz'
-    ManagedBy: 'Bicep'
-  }
-  sku: {
-    name: 'Basic'
-  }
-  properties: {
-    adminUserEnabled: false
-  }
 }
 
 resource containerAppEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' = {
@@ -83,12 +71,6 @@ resource containerAppEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' 
 resource backendContainerApp 'Microsoft.App/containerApps@2023-05-01' = {
   name: 'quiz-backend'
   location: location
-  registries:[
-    {
-      server: containerRegistry.properties.loginServer
-      identity: managedIdentity.id
-    }
-  ]
   tags: {
     Environment: 'Production'
     Project: 'Quiz'
