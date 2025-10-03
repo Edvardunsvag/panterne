@@ -164,7 +164,7 @@ jobs:
         echo "  --parameters backendImage=\"fortequizcontainerregistry.azurecr.io/quiz-backend:${RUN_NUMBER}\" \\"
         echo "  --parameters sqlConnectionString=\"${SQL_CONNECTION_STRING:0:20}...\" \\"
         echo "  --parameters azureOpenAIApiKey=\"${AZURE_OPENAI_API_KEY:0:20}...\" \\"
-        echo "  --name \"deployment-${RUN_NUMBER}" \\"
+        echo "  --name \"deployment-${RUN_NUMBER}\" \\"
         echo "  --output table"
         echo ""
         
