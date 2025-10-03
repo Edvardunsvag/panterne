@@ -21,31 +21,10 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
     
-    - name: Install Azure CLI 2.72.0
-      run: |
-        # Remove current version and clean up
-        sudo apt-get remove -y azure-cli
-        sudo rm -f /etc/apt/sources.list.d/azure-cli.list
-        sudo rm -f /etc/apt/sources.list.d/azure-cli.sources
-        
-        # Add Microsoft repository
-        curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/microsoft.gpg > /dev/null
-        echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/azure-cli.list
-        
-        # Update package list
-        sudo apt-get update
-        
-        # Install specific version (try different version formats)
-        sudo apt-get install azure-cli=2.72.0-1~focal || \
-        sudo apt-get install azure-cli=2.72.0-1~jammy || \
-        sudo apt-get install azure-cli=2.72.0-1~bullseye || \
-        sudo apt-get install azure-cli=2.72.0
-    
     - name: Azure Login
-      uses: azure/login@v1
+      uses: azure/login@v2
       with:
         client-id: ${{ secrets.AZURE_CLIENT_ID }}
-        client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
     
@@ -57,9 +36,9 @@ jobs:
           image=moby/buildkit:latest
         use: true
     
-    - name: Login to Azure Container Registry
+    - name: Login to Azure Container Registry (OIDC)
       run: |
-        az acr login --name fortequizcontainerregistry
+        az acr login --name fortequizcontainerregistry --resource-group forte-quiz-edvard
     
     - name: Build and Push Frontend Image
       uses: docker/build-push-action@v5
@@ -93,17 +72,29 @@ jobs:
     - name: Deploy Infrastructure
       run: |
         az deployment group create \
-          --resource-group "forte-quiz-edvard" \
+          --resource-group "${{ env.RESOURCE_GROUP }}" \
           --template-file "infrastructure/frontend.bicep" \
           --parameters "infrastructure/parameters.json" \
-          --parameters frontendImage="fortequizcontainerregistry.azurecr.io/quiz-frontend:24" \
-          --parameters backendImage="fortequizcontainerregistry.azurecr.io/quiz-backend:24" \
-          --parameters azureOpenAIEndpoint="***" \
-          --parameters azureOpenAIApiKey="***" \
-          --parameters azureOpenAIDeploymentName="***" \
-          --parameters sqlConnectionString="" \
-          --name "deployment-24-2a9dd509d0d842c51f7f578e03307c98c7787359" \
-          --debug
+          --parameters frontendImage="${{ env.CONTAINER_REGISTRY }}/quiz-frontend:${{ github.run_number }}" \
+          --parameters backendImage="${{ env.CONTAINER_REGISTRY }}/quiz-backend:${{ github.run_number }}" \
+          --parameters azureOpenAIEndpoint="${{ secrets.AZURE_OPENAI_ENDPOINT }}" \
+          --parameters azureOpenAIApiKey="${{ secrets.AZURE_OPENAI_API_KEY }}" \
+          --parameters azureOpenAIDeploymentName="${{ secrets.AZURE_OPENAI_DEPLOYMENT_NAME }}" \
+          --parameters sqlConnectionString="${{ secrets.SQL_CONNECTION_STRING }}" \
+          --name "deployment-${{ github.run_number }}" \
+          --output table
+    
+    - name: Update Container Apps
+      run: |
+        az containerapp update \
+          --name "${{ env.FRONTEND_CONTAINER_APP_NAME }}" \
+          --resource-group "${{ env.RESOURCE_GROUP }}" \
+          --image "${{ env.CONTAINER_REGISTRY }}/quiz-frontend:${{ github.run_number }}"
+        
+        az containerapp update \
+          --name "${{ env.BACKEND_CONTAINER_APP_NAME }}" \
+          --resource-group "${{ env.RESOURCE_GROUP }}" \
+          --image "${{ env.CONTAINER_REGISTRY }}/quiz-backend:${{ github.run_number }}"
     
     - name: Get URLs
       id: get-urls
