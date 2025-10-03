@@ -227,9 +227,6 @@ resource frontendContainerApp 'Microsoft.App/containerApps@2023-05-01' = {
       }
     }
   }
-  dependsOn: [
-    backendContainerApp
-  ]
 }
 
 output frontendUrl string = 'https://${frontendContainerApp.properties.configuration.ingress.fqdn}'
