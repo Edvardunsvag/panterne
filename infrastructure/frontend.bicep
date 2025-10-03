@@ -23,8 +23,11 @@ param sqlConnectionString string
 
 var containerAppName = 'quiz-frontend'
 var environmentName = 'quiz-environment'
-var managedIdentityName = 'quiz-managed-identity'
 var containerRegistryName = 'fortequizcontainerregistry'
+
+resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' existing = {
+  name: 'forte-quiz-managed-identity'
+}
 
 resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09-01' = {
   name: 'law-quiz'
@@ -42,7 +45,7 @@ resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09
   }
 }
 
-resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-07-01' = {
+resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-07-01' existing = {
   name: containerRegistryName
   location: location
   tags: {
@@ -55,16 +58,6 @@ resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-07-01' =
   }
   properties: {
     adminUserEnabled: false
-  }
-}
-
-resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
-  name: managedIdentityName
-  location: location
-  tags: {
-    Environment: 'Production'
-    Project: 'Quiz'
-    ManagedBy: 'Bicep'
   }
 }
 
@@ -90,6 +83,12 @@ resource containerAppEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' 
 resource backendContainerApp 'Microsoft.App/containerApps@2023-05-01' = {
   name: 'quiz-backend'
   location: location
+  registries:[
+    {
+      server: containerRegistry.properties.loginServer
+      identity: managedIdentity.id
+    }
+  ]
   tags: {
     Environment: 'Production'
     Project: 'Quiz'
@@ -105,6 +104,12 @@ resource backendContainerApp 'Microsoft.App/containerApps@2023-05-01' = {
     managedEnvironmentId: containerAppEnvironment.id
     configuration: {
       activeRevisionsMode: 'Single'
+       registries:[
+        {
+          server: containerRegistry.properties.loginServer
+          identity: managedIdentity.id
+        }
+      ]
       ingress: {
         external: true
         targetPort: 80
@@ -167,6 +172,7 @@ resource frontendContainerApp 'Microsoft.App/containerApps@2023-05-01' = {
     Project: 'Quiz'
     ManagedBy: 'Bicep'
   }
+
   identity: {
     type: 'UserAssigned'
     userAssignedIdentities: {
@@ -177,6 +183,12 @@ resource frontendContainerApp 'Microsoft.App/containerApps@2023-05-01' = {
     managedEnvironmentId: containerAppEnvironment.id
     configuration: {
       activeRevisionsMode: 'Single'
+      registries:[
+        {
+          server: containerRegistry.properties.loginServer
+          identity: managedIdentity.id
+        }
+      ]
       ingress: {
         external: true
         targetPort: 443
