@@ -173,14 +173,15 @@ jobs:
         az deployment group create \
           --resource-group "${RESOURCE_GROUP}" \
           --template-file "infrastructure/frontend.bicep" \
-          --parameters "infrastructure/parameters.json" \
+          --parameters @infrastructure/parameters.json \
           --parameters frontendImage="fortequizcontainerregistry.azurecr.io/quiz-frontend:${RUN_NUMBER}" \
           --parameters backendImage="fortequizcontainerregistry.azurecr.io/quiz-backend:${RUN_NUMBER}" \
           --parameters sqlConnectionString="${SQL_CONNECTION_STRING}" \
           --parameters azureOpenAIApiKey="${AZURE_OPENAI_API_KEY}" \
           --name "deployment-${RUN_NUMBER}" \
           --output table \
-          --verbose
+          --debug --verbose
+
     
     - name: Update Container Apps
       run: |
