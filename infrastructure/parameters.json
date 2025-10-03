@@ -2,8 +2,14 @@
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "frontendImage": {
-      "value": "fortequizcontainerregistry.azurecr.io/quiz-frontend:latest"
+    "backendImage": {
+      "value": "fortequizcontainerregistry.azurecr.io/quiz-backend:latest"
+    },
+    "azureOpenAIDeploymentName": {
+      "value": "gpt-4o-mini"
+    },
+    "azureOpenAIEndpoint": {
+      "value": "https://faggruppeaihub9416157283.openai.azure.com/"
     }
   }
 }
